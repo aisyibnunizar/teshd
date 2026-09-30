@@ -1,0 +1,3394 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hay Day Market - Jual Beli Alat & Bahan Hay Day</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Google Fonts: Fredoka & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              farm: {
+                woodDark: "#5c3a21",
+                wood: "#8b5a2b",
+                woodLight: "#c2925b",
+                plank: "#f5e2bb",
+                greenDark: "#2e7d32",
+                green: "#4caf50",
+                greenLight: "#81c784",
+                sunYellow: "#fbc02d",
+                barnRed: "#c62828",
+                skyBlue: "#e0f7fa",
+              },
+            },
+            fontFamily: {
+              fredoka: ['"Fredoka"', "sans-serif"],
+              sans: ['"Inter"', "sans-serif"],
+            },
+            boxShadow: {
+              hayday: "0 4px 0 #6d421d",
+              "hayday-green": "0 4px 0 #1b5e20",
+              "hayday-red": "0 4px 0 #8e0000",
+              "hayday-yellow": "0 4px 0 #b26a00",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        background-color: #f7eedb;
+        background-image:
+          radial-gradient(#dfcba5 1.2px, transparent 1.2px),
+          radial-gradient(#dfcba5 1.2px, #f7eedb 1.2px);
+        background-size: 36px 36px;
+        background-position:
+          0 0,
+          18px 18px;
+      }
+      .wooden-panel {
+        background: linear-gradient(180deg, #a76d38 0%, #855325 100%);
+        border-bottom: 4px solid #4a280e;
+        box-shadow:
+          inset 0 2px 0 rgba(255, 255, 255, 0.2),
+          0 4px 10px rgba(0, 0, 0, 0.15);
+      }
+      .item-image-wrapper {
+        background: radial-gradient(circle, #ffffff 45%, #faebd7 100%);
+      }
+      ::-webkit-scrollbar {
+        width: 7px;
+        height: 7px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1e0c5;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #8b5a2b;
+        border-radius: 4px;
+      }
+      .modal-backdrop {
+        background-color: rgba(30, 20, 10, 0.75);
+        backdrop-filter: blur(3px);
+      }
+    </style>
+  </head>
+  <body class="text-stone-800 font-sans min-h-screen flex flex-col antialiased">
+    <!-- Toast Notification Container -->
+    <div
+      id="toastContainer"
+      class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"
+    ></div>
+
+    <!-- Header / Navigation Bar -->
+    <header class="wooden-panel text-white sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20 py-2">
+          <!-- Brand / Logo -->
+          <div
+            class="flex items-center gap-3 cursor-pointer select-none"
+            onclick="switchView('buyer')"
+          >
+            <div
+              class="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-b from-amber-300 to-amber-500 rounded-2xl border-2 sm:border-3 border-amber-950 flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform overflow-hidden p-1"
+            >
+              <img
+                src="https://static.wikia.nocookie.net/hayday/images/4/4b/Site-logo.png"
+                alt="Hay Day Logo"
+                class="w-full h-full object-contain"
+                onerror="
+                  this.onerror = null;
+                  this.src =
+                    'https://placehold.co/100x100/fbc02d/5c3a21?text=HAY+DAY';
+                "
+              />
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span
+                  class="font-fredoka font-bold text-2xl sm:text-3xl tracking-wide text-amber-100 drop-shadow-[0_2px_2px_rgba(0,0,0,0.6)]"
+                  >HAY DAY MARKET</span
+                >
+                <span
+                  id="roleIndicatorBadge"
+                  class="text-[11px] uppercase px-2.5 py-0.5 rounded-full font-bold bg-green-500 text-white shadow tracking-wider"
+                  >PEMBELI</span
+                >
+              </div>
+              <p class="text-xs text-amber-200 font-medium hidden sm:block">
+                Pusat Jual Beli Alat Lumbung, Silo, Tanah, Bahan Olahan &
+                Kebutuhan Kebun
+              </p>
+            </div>
+          </div>
+
+          <!-- Role Toggle, Orders & Cart Nav Buttons -->
+          <div class="flex items-center gap-2 sm:gap-3">
+            <!-- Buyer Cart Button -->
+            <button
+              id="cartNavBtn"
+              onclick="openCartModal()"
+              class="relative bg-farm-green hover:bg-emerald-600 text-white px-3.5 sm:px-4 py-2.5 rounded-2xl font-fredoka font-semibold shadow-hayday-green active:translate-y-1 transition-all flex items-center gap-2 text-sm"
+            >
+              <i class="fa-solid fa-basket-shopping text-base sm:text-lg"></i>
+              <span class="hidden md:inline">Keranjang</span>
+              <span
+                id="cartCountBadge"
+                class="bg-farm-barnRed text-white text-xs w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center font-bold border-2 border-white"
+                >0</span
+              >
+            </button>
+
+            <!-- Buyer My Orders Button (Isolated to Device) -->
+            <button
+              id="ordersNavBtn"
+              onclick="openMyOrdersModal()"
+              class="relative bg-farm-sunYellow hover:bg-yellow-400 text-stone-900 px-3 sm:px-4 py-2.5 rounded-2xl font-fredoka font-semibold shadow-hayday-yellow active:translate-y-1 transition-all flex items-center gap-1.5 sm:gap-2 text-sm"
+            >
+              <i class="fa-solid fa-receipt text-stone-800"></i>
+              <span class="hidden sm:inline">Pesanan Saya</span>
+              <span
+                id="myOrdersCountBadge"
+                class="bg-amber-900 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold"
+                >0</span
+              >
+            </button>
+
+            <!-- Switch Mode Button -->
+            <button
+              onclick="toggleRoleModal()"
+              class="bg-amber-100 hover:bg-white text-stone-900 px-3.5 sm:px-4 py-2.5 rounded-2xl font-fredoka font-bold border-2 border-farm-woodDark shadow-hayday active:translate-y-1 transition-all flex items-center gap-2 text-xs sm:text-sm"
+            >
+              <i class="fa-solid fa-user-shield text-farm-wood"></i>
+              <span id="roleToggleText">Ganti ke Admin</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Notice Banner for In-Game Tag Coordination -->
+    <div
+      class="bg-amber-100 border-b-2 border-amber-300 text-stone-700 py-2.5 px-4 text-xs sm:text-sm"
+    >
+      <div
+        class="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-2"
+      >
+        <div class="flex items-center gap-2 font-medium flex-wrap">
+          <span
+            class="bg-farm-barnRed text-white px-2 py-0.5 rounded text-[11px] font-bold"
+            >INFO KIOS TOKO</span
+          >
+          <span id="topNoticeText"
+            >Pengiriman via Roadside Shop (Kios Pinggir Jalan). Add Tag Toko
+            Kami:
+            <strong
+              id="headerAdminTag"
+              class="text-farm-barnRed select-all bg-amber-200/80 px-2 py-0.5 rounded font-mono font-bold"
+              >#P9QL88V2Y</strong
+            ></span
+          >
+        </div>
+        <div class="flex items-center gap-3 text-xs">
+          <span class="text-green-700 font-bold"
+            ><i class="fa-solid fa-circle-check"></i> 100% Slot Roadside Shop
+            Aman</span
+          >
+          <a
+            href="javascript:void(0)"
+            onclick="openGuideModal()"
+            class="text-amber-800 underline font-semibold hover:text-amber-950"
+            >Cara Ambil Barang</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <!-- ============================================== -->
+      <!-- VIEW: BUYER / PEMBELI                          -->
+      <!-- ============================================== -->
+      <div id="buyerView" class="space-y-6">
+        <!-- Farm Hero Banner -->
+        <div
+          class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-700 text-white p-6 sm:p-8 shadow-md border-4 border-amber-900"
+        >
+          <div
+            class="absolute -right-8 -bottom-10 opacity-20 text-9xl select-none pointer-events-none"
+          >
+            🌾
+          </div>
+          <div class="relative z-10 max-w-2xl">
+            <span
+              class="bg-farm-sunYellow text-farm-woodDark font-fredoka text-xs sm:text-sm font-bold px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-2 shadow"
+              >Pasar Resmi Peternak Aktif</span
+            >
+            <h1
+              class="text-3xl sm:text-4xl md:text-5xl font-fredoka font-bold text-white mb-2 drop-shadow"
+            >
+              Kebutuhan Lengkap Perkebunan Hay Day Kamu!
+            </h1>
+            <p class="text-emerald-100 text-sm sm:text-base mb-4">
+              Lumbung dan silo selalu penuh? Dapatkan material baut, papan kayu,
+              lakban, paku, akta tanah, aneka perhiasan, umpan pancing, hingga
+              kue dan olahan mesin langsung siap ambil di Kios.
+            </p>
+            <div class="flex flex-wrap gap-2 text-xs sm:text-sm font-medium">
+              <span
+                class="bg-black/30 backdrop-blur px-3 py-1.5 rounded-xl flex items-center gap-2"
+                ><i class="fa-solid fa-bolt text-yellow-300"></i> Fast
+                Response</span
+              >
+              <span
+                class="bg-black/30 backdrop-blur px-3 py-1.5 rounded-xl flex items-center gap-2"
+                ><i class="fa-solid fa-coins text-amber-300"></i> Dijual 1 Koin
+                di Kios</span
+              >
+              <span
+                class="bg-black/30 backdrop-blur px-3 py-1.5 rounded-xl flex items-center gap-2"
+                ><i class="fa-brands fa-whatsapp text-emerald-300"></i>
+                Konfirmasi Instan WA</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter, Search, and In-Stock Controls -->
+        <div
+          class="bg-white rounded-3xl p-4 shadow-sm border-2 border-amber-200 flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center"
+        >
+          <!-- Search bar -->
+          <div class="relative flex-1">
+            <i
+              class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400"
+            ></i>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Cari Baut, Papan, Lakban, Paku, Gergaji, Cincin, Keju, Ikan..."
+              class="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-farm-green bg-stone-50 text-sm"
+              oninput="renderBuyerProducts()"
+            />
+          </div>
+
+          <!-- Stock Filter toggle -->
+          <div class="flex items-center gap-3 self-end md:self-center">
+            <label
+              class="inline-flex items-center cursor-pointer text-sm font-medium text-stone-700 select-none"
+            >
+              <input
+                type="checkbox"
+                id="onlyInStockCheckbox"
+                class="sr-only peer"
+                onchange="renderBuyerProducts()"
+              />
+              <div
+                class="w-11 h-6 bg-stone-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-farm-green"
+              ></div>
+              <span class="ml-2 font-fredoka font-medium"
+                >Hanya Ready Stok</span
+              >
+            </label>
+          </div>
+        </div>
+
+        <!-- Category Filter Pills -->
+        <div class="space-y-1">
+          <div
+            class="flex items-center justify-between text-xs font-semibold text-stone-600 px-1"
+          >
+            <span>Kategori Pilihan:</span>
+            <span class="text-stone-400 font-normal"
+              >Geser untuk melihat semua</span
+            >
+          </div>
+          <div
+            class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none"
+            id="categoryPillContainer"
+          >
+            <!-- dynamically rendered categories with icons -->
+          </div>
+        </div>
+
+        <!-- Products Grid Header -->
+        <div class="flex items-center justify-between pt-1">
+          <h2
+            class="font-fredoka text-2xl text-farm-woodDark font-bold flex items-center gap-2"
+          >
+            <span>Katalog Barang Kebun</span>
+            <span
+              id="productCountBadge"
+              class="text-sm bg-amber-200 text-farm-woodDark font-sans font-bold px-3 py-0.5 rounded-full"
+              >0 barang</span
+            >
+          </h2>
+          <span class="text-xs text-stone-500 italic hidden sm:inline"
+            >*Gambar produk resmi & stok terupdate langsung dari lumbung
+            admin</span
+          >
+        </div>
+
+        <!-- Products Grid -->
+        <div
+          id="buyerProductGrid"
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
+        >
+          <!-- populated via JS -->
+        </div>
+
+        <!-- Empty State -->
+        <div
+          id="noProductsFound"
+          class="hidden text-center py-16 bg-white rounded-3xl border-2 border-dashed border-amber-300 p-8"
+        >
+          <div class="text-6xl mb-3">🚜💨</div>
+          <h3 class="font-fredoka text-xl text-stone-700 font-bold mb-1">
+            Barang tidak ditemukan!
+          </h3>
+          <p class="text-stone-500 text-sm">
+            Coba cari dengan kata kunci lain atau pilih kategori "Semua Item".
+          </p>
+          <button
+            onclick="resetFilters()"
+            class="mt-4 px-5 py-2.5 bg-farm-wood text-white rounded-2xl text-sm font-semibold hover:bg-farm-woodDark transition-all"
+          >
+            Reset Pencarian
+          </button>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- VIEW: ADMIN / TOKO HAY DAY                     -->
+      <!-- ============================================== -->
+      <div id="adminView" class="hidden space-y-6">
+        <!-- Admin Top Banner -->
+        <div
+          class="bg-gradient-to-r from-farm-woodDark via-amber-900 to-farm-woodDark text-white rounded-3xl p-6 shadow-md border-4 border-amber-950 flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
+        >
+          <div>
+            <div class="flex items-center gap-2 mb-1.5">
+              <span
+                class="bg-red-500 text-white font-fredoka text-xs font-bold px-2.5 py-0.5 rounded-md uppercase tracking-wider"
+                >Owner Dashboard</span
+              >
+              <h1
+                class="text-2xl sm:text-3xl font-fredoka font-bold text-amber-100"
+              >
+                Pusat Kendali Toko Hay Day
+              </h1>
+            </div>
+            <p class="text-amber-200 text-xs sm:text-sm">
+              Melihat semua riwayat pesanan dari seluruh device pembeli, kelola
+              foto produk, harga, dan stok barang.
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button
+              onclick="openAddProductModal()"
+              class="bg-farm-green hover:bg-emerald-600 text-white font-fredoka font-semibold px-4 py-2.5 rounded-2xl shadow-hayday-green active:translate-y-1 transition-all flex items-center gap-2 text-sm"
+            >
+              <i class="fa-solid fa-circle-plus"></i> Tambah Item & Foto
+            </button>
+            <button
+              onclick="openSettingsModal()"
+              class="bg-amber-100 hover:bg-white text-stone-800 font-fredoka font-semibold px-4 py-2.5 rounded-2xl shadow-hayday active:translate-y-1 transition-all flex items-center gap-2 text-sm"
+            >
+              <i class="fa-solid fa-gears"></i> Pengaturan Toko
+            </button>
+          </div>
+        </div>
+
+        <!-- Admin Stat Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div
+            class="bg-white p-4 rounded-3xl border-2 border-amber-200 shadow-sm flex items-center justify-between"
+          >
+            <div>
+              <p class="text-xs font-medium text-stone-500">
+                Total Semua Pesanan
+              </p>
+              <h3
+                id="statTotalOrders"
+                class="font-fredoka text-2xl font-bold text-stone-800 mt-1"
+              >
+                0
+              </h3>
+              <span
+                id="statUniqueDevicesBadge"
+                class="text-[11px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded"
+                >0 Device Pelanggan</span
+              >
+            </div>
+            <div
+              class="w-12 h-12 rounded-2xl bg-amber-100 text-farm-wood flex items-center justify-center text-xl"
+            >
+              <i class="fa-solid fa-users-rectangle"></i>
+            </div>
+          </div>
+
+          <div
+            class="bg-white p-4 rounded-3xl border-2 border-amber-200 shadow-sm flex items-center justify-between"
+          >
+            <div>
+              <p class="text-xs font-medium text-stone-500">Omzet Penjualan</p>
+              <h3
+                id="statRevenue"
+                class="font-fredoka text-2xl font-bold text-emerald-600 mt-1"
+              >
+                Rp 0
+              </h3>
+              <span class="text-[11px] text-stone-400 font-medium"
+                >Dari order lunas/selesai</span
+              >
+            </div>
+            <div
+              class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl"
+            >
+              <i class="fa-solid fa-sack-dollar"></i>
+            </div>
+          </div>
+
+          <div
+            class="bg-white p-4 rounded-3xl border-2 border-amber-200 shadow-sm flex items-center justify-between"
+          >
+            <div>
+              <p class="text-xs font-medium text-stone-500">Katalog Barang</p>
+              <h3
+                id="statTotalItems"
+                class="font-fredoka text-2xl font-bold text-stone-800 mt-1"
+              >
+                0
+              </h3>
+              <span
+                id="statOutOfStockBadge"
+                class="text-[11px] font-semibold text-red-500 bg-red-50 px-2 py-0.5 rounded"
+                >0 Stok Habis</span
+              >
+            </div>
+            <div
+              class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl"
+            >
+              <i class="fa-solid fa-warehouse"></i>
+            </div>
+          </div>
+
+          <div
+            class="bg-white p-4 rounded-3xl border-2 border-amber-200 shadow-sm flex items-center justify-between"
+          >
+            <div>
+              <p class="text-xs font-medium text-stone-500">Pesanan Pending</p>
+              <h3
+                id="statPendingOrders"
+                class="font-fredoka text-2xl font-bold text-red-600 mt-1"
+              >
+                0
+              </h3>
+              <span class="text-[11px] text-stone-400 font-medium"
+                >Perlu dikonfirmasi WA</span
+              >
+            </div>
+            <div
+              class="w-12 h-12 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center text-xl"
+            >
+              <i class="fa-solid fa-bell"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin Navigation Tabs -->
+        <div class="flex border-b-2 border-amber-200 space-x-2">
+          <button
+            id="adminTabOrdersBtn"
+            onclick="switchAdminTab('orders')"
+            class="py-3 px-5 font-fredoka font-bold text-base border-b-4 border-farm-wood text-farm-woodDark flex items-center gap-2 transition-all"
+          >
+            <i class="fa-solid fa-list-check"></i> Semua Pesanan Pembeli
+            (Seluruh Device)
+            <span
+              id="pendingCountTabBadge"
+              class="bg-farm-barnRed text-white text-xs px-2 py-0.5 rounded-full font-sans"
+              >0</span
+            >
+          </button>
+          <button
+            id="adminTabProductsBtn"
+            onclick="switchAdminTab('products')"
+            class="py-3 px-5 font-fredoka font-bold text-base border-b-4 border-transparent text-stone-500 hover:text-stone-800 flex items-center gap-2 transition-all"
+          >
+            <i class="fa-solid fa-images"></i> Kelola Item & Foto Produk
+          </button>
+        </div>
+
+        <!-- Tab Content 1: Orders Management (Global for Admin) -->
+        <div id="adminTabOrders" class="space-y-4">
+          <div
+            class="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-3 bg-white p-4 rounded-2xl border border-stone-200"
+          >
+            <div
+              class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 flex-1"
+            >
+              <!-- Order search -->
+              <div class="relative flex-1">
+                <i
+                  class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-xs"
+                ></i>
+                <input
+                  type="text"
+                  id="adminOrderSearchInput"
+                  oninput="renderAdminOrders()"
+                  placeholder="Cari Order ID, Tag #, Nama Farm, WhatsApp..."
+                  class="w-full pl-8 pr-3 py-2 text-xs bg-stone-50 border border-stone-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-farm-wood"
+                />
+              </div>
+              <!-- Status filter -->
+              <div class="sm:w-52">
+                <select
+                  id="adminOrderFilterStatus"
+                  onchange="renderAdminOrders()"
+                  class="w-full text-xs bg-stone-50 border border-stone-300 rounded-xl px-3 py-2 focus:outline-none"
+                >
+                  <option value="ALL">Semua Status Order</option>
+                  <option value="PENDING">Menunggu Pembayaran</option>
+                  <option value="PAID">Sudah Dibayar</option>
+                  <option value="READY_SHOP">Siap di Kios (Roadside)</option>
+                  <option value="COMPLETED">Selesai</option>
+                  <option value="CANCELLED">Dibatalkan</option>
+                </select>
+              </div>
+            </div>
+            <div
+              class="text-[11px] text-stone-500 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200"
+            >
+              <i class="fa-solid fa-fingerprint text-amber-700"></i> Admin dapat
+              memantau pesanan lintas perangkat beserta
+              <strong>Device ID</strong> pembeli.
+            </div>
+          </div>
+
+          <div id="adminOrdersContainer" class="space-y-3">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Tab Content 2: Products Management & Table -->
+        <div id="adminTabProducts" class="hidden space-y-4">
+          <div
+            class="bg-white p-4 rounded-3xl border-2 border-amber-200 shadow-sm flex flex-col md:flex-row justify-between items-stretch md:items-center gap-3"
+          >
+            <div
+              class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-1"
+            >
+              <!-- Search item input -->
+              <div class="relative flex-1">
+                <i
+                  class="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400"
+                ></i>
+                <input
+                  type="text"
+                  id="adminProductSearchInput"
+                  oninput="renderAdminProductsTable()"
+                  placeholder="Cari item di lumbung toko..."
+                  class="w-full pl-10 pr-3 py-2.5 text-sm bg-stone-50 border border-stone-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-farm-wood"
+                />
+              </div>
+
+              <!-- Dynamic Category filter for table -->
+              <div class="sm:w-56">
+                <select
+                  id="adminProductFilterCategory"
+                  onchange="renderAdminProductsTable()"
+                  class="w-full py-2.5 px-3 text-sm bg-stone-50 border border-stone-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-farm-wood font-medium text-stone-700"
+                >
+                  <!-- Populated dynamically via JS -->
+                </select>
+              </div>
+            </div>
+
+            <!-- Prominent Add Item Button on the Right Side of the Row -->
+            <div class="flex items-center gap-2 justify-end">
+              <button
+                onclick="openAddProductModal()"
+                class="w-full sm:w-auto bg-farm-green hover:bg-emerald-600 text-white font-fredoka font-bold px-5 py-2.5 rounded-2xl shadow-hayday-green active:translate-y-1 transition-all flex items-center justify-center gap-2.5 text-sm whitespace-nowrap"
+              >
+                <i class="fa-solid fa-circle-plus text-base"></i>
+                <span>+ Tambah Barang Baru</span>
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="overflow-x-auto bg-white rounded-3xl border-2 border-amber-200 shadow-sm"
+          >
+            <table class="w-full text-left text-sm text-stone-700">
+              <thead
+                class="bg-amber-100/70 text-farm-woodDark font-fredoka text-xs uppercase border-b border-amber-200"
+              >
+                <tr>
+                  <th class="px-4 py-3">Foto & Item</th>
+                  <th class="px-4 py-3">Kategori</th>
+                  <th class="px-4 py-3">Harga (Rp)</th>
+                  <th class="px-4 py-3">Satuan</th>
+                  <th class="px-4 py-3">Stok Gudang</th>
+                  <th class="px-4 py-3">Status</th>
+                  <th class="px-4 py-3 text-right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody
+                id="adminProductsTableBody"
+                class="divide-y divide-stone-200 font-medium"
+              >
+                <!-- populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ============================================== -->
+    <!-- MODAL: ROLE SWITCHER                           -->
+    <!-- ============================================== -->
+    <div
+      id="roleModal"
+      class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-3xl border-4 border-amber-800 max-w-md w-full p-6 shadow-2xl relative"
+      >
+        <button
+          onclick="closeRoleModal()"
+          class="absolute top-4 right-4 text-stone-400 hover:text-stone-700 text-lg"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="text-center mb-6">
+          <div
+            class="w-14 h-14 bg-amber-100 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-2 border-2 border-amber-300"
+          >
+            🔄
+          </div>
+          <h3 class="font-fredoka text-2xl font-bold text-farm-woodDark">
+            Pilih Mode Tampilan
+          </h3>
+          <p class="text-xs text-stone-500">
+            Beralih antara pembeli perkebunan atau dashboard admin pengelola
+            toko
+          </p>
+        </div>
+
+        <div class="space-y-3">
+          <!-- Option Buyer -->
+          <button
+            onclick="selectRole('buyer')"
+            class="w-full text-left p-4 rounded-2xl border-2 border-stone-200 hover:border-farm-green hover:bg-green-50 transition-all flex items-center justify-between group"
+          >
+            <div class="flex items-center gap-3">
+              <span class="text-3xl">🧑‍🌾</span>
+              <div>
+                <h4
+                  class="font-fredoka font-bold text-stone-800 group-hover:text-farm-green"
+                >
+                  Mode Pembeli (Buyer)
+                </h4>
+                <p class="text-xs text-stone-500">
+                  Lihat katalog, beli barang & riwayat pesanan device ini
+                </p>
+              </div>
+            </div>
+            <i
+              class="fa-solid fa-chevron-right text-stone-400 group-hover:text-farm-green"
+            ></i>
+          </button>
+
+          <!-- Option Admin -->
+          <div
+            class="p-4 rounded-2xl border-2 border-stone-200 hover:border-amber-600 transition-all"
+          >
+            <div class="flex items-center gap-3 mb-2">
+              <span class="text-3xl">👑</span>
+              <div>
+                <h4 class="font-fredoka font-bold text-stone-800">
+                  Mode Admin / Pemilik Toko
+                </h4>
+                <p class="text-xs text-stone-500">
+                  Pantau seluruh riwayat pesanan semua device, edit foto & harga
+                </p>
+              </div>
+            </div>
+            <div class="pt-2 border-t border-stone-100 flex items-center gap-2">
+              <input
+                type="password"
+                id="adminPinInput"
+                placeholder="PIN Admin (Default: 1234)"
+                class="flex-1 text-xs px-3 py-2 border rounded-xl focus:outline-none focus:ring-1 focus:ring-amber-500"
+              />
+              <button
+                onclick="verifyAndSelectAdmin()"
+                class="bg-amber-800 hover:bg-amber-900 text-white text-xs font-fredoka px-4 py-2 rounded-xl"
+              >
+                Buka Admin
+              </button>
+            </div>
+            <p class="text-[11px] text-stone-400 mt-1 italic">
+              *PIN Default demo: <strong>1234</strong>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL: KERANJANG BELANJA (CART)                -->
+    <!-- ============================================== -->
+    <div
+      id="cartModal"
+      class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-3xl border-4 border-amber-800 max-w-xl w-full p-6 shadow-2xl max-h-[90vh] flex flex-col"
+      >
+        <div
+          class="flex items-center justify-between pb-4 border-b border-stone-200"
+        >
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">🧺</span>
+            <h3 class="font-fredoka text-2xl font-bold text-farm-woodDark">
+              Keranjang Belanja Kebun
+            </h3>
+          </div>
+          <button
+            onclick="closeCartModal()"
+            class="text-stone-400 hover:text-stone-700 text-xl"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- Items List -->
+        <div
+          id="cartItemsContainer"
+          class="flex-grow overflow-y-auto py-4 space-y-3"
+        >
+          <!-- populated by JS -->
+        </div>
+
+        <!-- Empty Cart State -->
+        <div id="cartEmptyState" class="hidden py-12 text-center">
+          <div class="text-5xl mb-2">🛒🌾</div>
+          <h4 class="font-fredoka text-lg text-stone-600">
+            Keranjang masih kosong!
+          </h4>
+          <p class="text-xs text-stone-400 mb-4">
+            Ayo pilih alat upgrade lumbung, silo, atau olahan makanan.
+          </p>
+          <button
+            onclick="closeCartModal()"
+            class="bg-farm-green text-white px-5 py-2.5 rounded-2xl text-sm font-fredoka shadow"
+          >
+            Mulai Belanja
+          </button>
+        </div>
+
+        <!-- Summary Footer -->
+        <div id="cartFooter" class="pt-4 border-t border-stone-200 space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-stone-600 text-sm font-medium"
+              >Total Pembelian:</span
+            >
+            <span
+              id="cartTotalPrice"
+              class="font-fredoka text-2xl font-bold text-emerald-700"
+              >Rp 0</span
+            >
+          </div>
+          <div class="flex gap-2">
+            <button
+              onclick="clearCart()"
+              class="px-4 py-2.5 rounded-2xl border-2 border-stone-200 text-stone-600 text-sm font-semibold hover:bg-stone-50"
+            >
+              Kosongkan
+            </button>
+            <button
+              onclick="openCheckoutModal()"
+              class="flex-1 bg-farm-green hover:bg-emerald-600 text-white py-2.5 rounded-2xl font-fredoka font-bold text-base shadow-hayday-green active:translate-y-1 transition-all flex items-center justify-center gap-2"
+            >
+              <span>Isi Data Pemesan</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL: FORMULIR CHECKOUT                       -->
+    <!-- ============================================== -->
+    <div
+      id="checkoutModal"
+      class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-3xl border-4 border-amber-800 max-w-xl w-full p-6 shadow-2xl max-h-[95vh] overflow-y-auto"
+      >
+        <div
+          class="flex items-center justify-between pb-3 border-b border-stone-200 mb-4"
+        >
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">📋</span>
+            <div>
+              <h3 class="font-fredoka text-2xl font-bold text-farm-woodDark">
+                Data Pemesan Hay Day
+              </h3>
+              <p class="text-xs text-stone-500">
+                Pastikan Tag akun & nama farm tepat agar barang tidak salah
+                kirim.
+              </p>
+            </div>
+          </div>
+          <button
+            onclick="closeCheckoutModal()"
+            class="text-stone-400 hover:text-stone-700 text-xl"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <form
+          id="checkoutForm"
+          onsubmit="handleCheckoutSubmit(event)"
+          class="space-y-4 text-sm"
+        >
+          <!-- Tag Player -->
+          <div>
+            <label class="block font-semibold text-stone-700 mb-1">
+              Tag Pemain Hay Day <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <span
+                class="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-stone-400"
+                >#</span
+              >
+              <input
+                type="text"
+                id="buyerTagInput"
+                required
+                placeholder="Contoh: 88P9QLV2Y (Lihat di profil game)"
+                class="w-full pl-8 pr-3 py-2.5 border border-stone-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-farm-green font-mono uppercase text-sm"
+              />
+            </div>
+            <span class="text-[11px] text-stone-400"
+              >Admin akan meng-add friend kebunmu menggunakan tag ini.</span
+            >
+          </div>
+
+          <!-- Farm Name -->
+          <div>
+            <label class="block font-semibold text-stone-700 mb-1">
+              Nama Farm / Kebun Hay Day <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="buyerFarmInput"
+              required
+              placeholder="Contoh: Kebun Berkah / Level 52"
+              class="w-full px-3.5 py-2.5 border border-stone-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-farm-green text-sm"
+            />
+          </div>
+
+          <!-- WhatsApp Number -->
+          <div>
+            <label class="block font-semibold text-stone-700 mb-1">
+              Nomor WhatsApp Aktif <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="tel"
+              id="buyerWhatsappInput"
+              required
+              placeholder="Contoh: 081234567890"
+              class="w-full px-3.5 py-2.5 border border-stone-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-farm-green text-sm"
+            />
+          </div>
+
+          <!-- Payment Method -->
+          <div>
+            <label class="block font-semibold text-stone-700 mb-1"
+              >Metode Pembayaran</label
+            >
+            <select
+              id="paymentMethodSelect"
+              class="w-full px-3.5 py-2.5 border border-stone-300 rounded-2xl focus:outline-none bg-stone-50 text-sm"
+            >
+              <option value="QRIS (Semua E-Wallet / Mobile Banking)">
+                QRIS (DANA, OVO, GoPay, ShopeePay, BCA, Mandiri)
+              </option>
+              <option value="DANA Dompet Digital">DANA Dompet Digital</option>
+              <option value="GoPay">GoPay</option>
+              <option value="Transfer Bank BCA / Mandiri">
+                Transfer Bank (BCA / Mandiri / BRI)
+              </option>
+            </select>
+          </div>
+
+          <!-- Notes -->
+          <div>
+            <label class="block font-semibold text-stone-700 mb-1"
+              >Catatan Tambahan (Opsional)</label
+            >
+            <textarea
+              id="buyerNotesInput"
+              rows="2"
+              placeholder="Contoh: Tolong kirim malam ya kak saat senggang..."
+              class="w-full px-3.5 py-2 border border-stone-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-farm-green text-sm"
+            ></textarea>
+          </div>
+
+          <!-- Total Bill preview -->
+          <div class="bg-amber-50 p-3.5 rounded-2xl border border-amber-200">
+            <div
+              class="flex justify-between items-center text-xs text-stone-600 mb-1"
+            >
+              <span>Total Barang:</span>
+              <span id="checkoutItemCount">0 paket/item</span>
+            </div>
+            <div
+              class="flex justify-between items-center font-bold text-farm-woodDark"
+            >
+              <span>Total Tagihan:</span>
+              <span
+                id="checkoutTotalAmount"
+                class="text-emerald-700 font-fredoka text-xl"
+                >Rp 0</span
+              >
+            </div>
+            <div
+              class="mt-2 pt-2 border-t border-amber-200 text-[11px] text-stone-500 flex items-center justify-between"
+            >
+              <span>Device ID Anda:</span>
+              <span
+                id="checkoutDeviceIdBadge"
+                class="font-mono text-[10px] bg-amber-200 px-1.5 py-0.5 rounded text-stone-800"
+              ></span>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full bg-farm-green hover:bg-emerald-600 text-white py-3 rounded-2xl font-fredoka font-bold text-base shadow-hayday-green active:translate-y-1 transition-all flex items-center justify-center gap-2"
+          >
+            <i class="fa-solid fa-check-circle"></i>
+            <span>Buat Pesanan & Buka Invoice</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL: INVOICE / STRUK PESANAN                 -->
+    <!-- ============================================== -->
+    <div
+      id="invoiceModal"
+      class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-3xl border-4 border-amber-800 max-w-lg w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto"
+      >
+        <div class="text-center pb-4 border-b border-stone-200">
+          <span class="text-4xl inline-block mb-1">🎉</span>
+          <h3 class="font-fredoka text-2xl font-bold text-stone-800">
+            Pesanan Diterima!
+          </h3>
+          <p class="text-xs text-stone-500">
+            Kirim konfirmasi ke WhatsApp admin untuk pemajangan barang di Kios
+          </p>
+        </div>
+
+        <div id="invoiceDetailsContainer" class="py-4 space-y-3 text-sm">
+          <!-- Rendered by JS -->
+        </div>
+
+        <div
+          class="bg-amber-50 p-3.5 rounded-2xl border border-amber-300 text-xs text-amber-900 space-y-1"
+        >
+          <p class="font-bold flex items-center gap-1.5">
+            <i class="fa-solid fa-lightbulb text-amber-600"></i> Cara Klaim
+            Barang:
+          </p>
+          <p class="text-stone-700">
+            1. Klik tombol WhatsApp di bawah untuk konfirmasi otomatis.
+          </p>
+          <p class="text-stone-700">
+            2. Buka toko roadside admin saat online bersamaan (Admin pasang
+            seharga 1 koin).
+          </p>
+        </div>
+
+        <div class="mt-4 flex flex-col gap-2">
+          <a
+            id="waConfirmBtn"
+            href="#"
+            target="_blank"
+            class="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-2xl font-fredoka font-bold text-center text-sm shadow flex items-center justify-center gap-2"
+          >
+            <i class="fa-brands fa-whatsapp text-lg"></i>
+            <span>Konfirmasi ke WhatsApp Admin</span>
+          </a>
+          <button
+            onclick="closeInvoiceModal()"
+            class="w-full bg-stone-100 hover:bg-stone-200 text-stone-700 py-2.5 rounded-2xl font-semibold text-sm"
+          >
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL: RIWAYAT PESANAN (DEVICE ISOLATED)       -->
+    <!-- ============================================== -->
+    <div
+      id="myOrdersModal"
+      class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-3xl border-4 border-amber-800 max-w-2xl w-full p-6 shadow-2xl max-h-[90vh] flex flex-col"
+      >
+        <div
+          class="flex items-center justify-between pb-3 border-b border-stone-200"
+        >
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">📱</span>
+            <div>
+              <h3 class="font-fredoka text-2xl font-bold text-farm-woodDark">
+                Riwayat Pesanan Saya
+              </h3>
+              <p class="text-xs text-stone-500">
+                Khusus menampilkan transaksi dari perangkat/browser ini.
+              </p>
+            </div>
+          </div>
+          <button
+            onclick="closeMyOrdersModal()"
+            class="text-stone-400 hover:text-stone-700 text-xl"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- Device Identifier Info Badge -->
+        <div
+          class="my-3 bg-amber-50 border border-amber-200 rounded-2xl p-3 text-xs flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2"
+        >
+          <div>
+            <span class="text-stone-500">ID Perangkat Ini:</span>
+            <span
+              id="modalCurrentDeviceId"
+              class="font-mono font-bold text-amber-900 bg-amber-200/80 px-2 py-0.5 rounded ml-1 select-all"
+            ></span>
+          </div>
+          <button
+            onclick="toggleCrossDeviceSearch()"
+            class="text-farm-wood font-semibold hover:underline flex items-center gap-1 text-xs"
+          >
+            <i class="fa-solid fa-magnifying-glass"></i> Cari order dari
+            HP/Device lain?
+          </button>
+        </div>
+
+        <!-- Optional: Cross-device Order Lookup (by Tag/WhatsApp) -->
+        <div
+          id="crossDeviceSearchContainer"
+          class="hidden mb-3 p-3 bg-white border-2 border-dashed border-amber-300 rounded-2xl text-xs space-y-2"
+        >
+          <p class="font-semibold text-stone-700">
+            Lacak Transaksi di Luar Perangkat Ini:
+          </p>
+          <div class="flex gap-2">
+            <input
+              type="text"
+              id="crossSearchQuery"
+              placeholder="Ketik Tag (#88P9QL) atau No. WhatsApp"
+              class="flex-1 px-3 py-1.5 border rounded-xl focus:outline-none focus:ring-1 focus:ring-farm-wood text-xs"
+            />
+            <button
+              onclick="executeCrossDeviceSearch()"
+              class="bg-farm-wood text-white px-3 py-1.5 rounded-xl font-fredoka font-semibold hover:bg-farm-woodDark"
+            >
+              Cari
+            </button>
+            <button
+              onclick="resetDeviceOrdersView()"
+              class="bg-stone-200 text-stone-700 px-3 py-1.5 rounded-xl font-medium"
+            >
+              Reset
+            </button>
+          </div>
+        </div>
+
+        <!-- Order List Container -->
+        <div
+          id="myOrdersListContainer"
+          class="flex-grow overflow-y-auto py-2 space-y-3"
+        >
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL: PANDUAN PENGAMBILAN BARANG              -->
+    <!-- ============================================== -->
+    <div
+      id="guideModal"
+      class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-3xl border-4 border-amber-800 max-w-lg w-full p-6 shadow-2xl"
+      >
+        <div
+          class="flex items-center justify-between pb-3 border-b border-stone-200 mb-3"
+        >
+          <h3
+            class="font-fredoka text-2xl font-bold text-farm-woodDark flex items-center gap-2"
+          >
+            <span>📖 Panduan Aman Roadside Shop</span>
+          </h3>
+          <button
+            onclick="closeGuideModal()"
+            class="text-stone-400 hover:text-stone-700 text-xl"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="space-y-3 text-sm text-stone-700">
+          <p>
+            Agar barang belanjaan tidak terambil oleh pemain acak koran di Hay
+            Day:
+          </p>
+          <div
+            class="bg-amber-50 p-3.5 rounded-2xl border border-amber-200 space-y-2 text-xs"
+          >
+            <p>
+              <strong>1. Jangan pasang iklan koran:</strong> Pastikan tokomu
+              maupun toko admin tidak sedang aktif iklan koran.
+            </p>
+            <p>
+              <strong>2. Slot Ujung Kanan:</strong> Admin akan menaruh barang di
+              slot paling kanan toko tanpa koran.
+            </p>
+            <p>
+              <strong>3. Hitungan Detik:</strong> Tunggu aba-aba "READY / AMBIL"
+              di WhatsApp lalu segera borong.
+            </p>
+            <p>
+              <strong>4. Kapasitas:</strong> Pastikan kapasitas lumbung/silo
+              kamu masih mencukupi.
+            </p>
+          </div>
+        </div>
+        <button
+          onclick="closeGuideModal()"
+          class="w-full mt-4 bg-farm-wood hover:bg-farm-woodDark text-white py-2.5 rounded-2xl font-fredoka"
+        >
+          Mengerti
+        </button>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL: TAMBAH / EDIT PRODUK (DENGAN GAMBAR)    -->
+    <!-- ============================================== -->
+    <div
+      id="productCrudModal"
+      class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-3xl border-4 border-amber-800 max-w-xl w-full p-6 shadow-2xl max-h-[95vh] overflow-y-auto"
+      >
+        <div
+          class="flex items-center justify-between pb-3 border-b border-stone-200 mb-4"
+        >
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">🌾</span>
+            <h3
+              id="productCrudModalTitle"
+              class="font-fredoka text-2xl font-bold text-farm-woodDark"
+            >
+              Tambah Item Baru
+            </h3>
+          </div>
+          <button
+            onclick="closeProductCrudModal()"
+            class="text-stone-400 hover:text-stone-700 text-xl"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <form
+          id="productCrudForm"
+          onsubmit="handleProductCrudSubmit(event)"
+          class="space-y-4 text-sm"
+        >
+          <input type="hidden" id="crudProductId" value="" />
+
+          <!-- Product Name -->
+          <div>
+            <label class="block font-semibold text-stone-700 mb-1"
+              >Nama Barang / Item <span class="text-red-500">*</span></label
+            >
+            <input
+              type="text"
+              id="crudProductName"
+              required
+              placeholder="Contoh: Baut Lumbung (Bolt)"
+              class="w-full px-3.5 py-2.5 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-farm-green"
+            />
+          </div>
+
+          <!-- Expanded Category & Custom Category Trigger -->
+          <div class="space-y-2">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block font-semibold text-stone-700 mb-1"
+                  >Kategori Barang <span class="text-red-500">*</span></label
+                >
+                <select
+                  id="crudProductCategory"
+                  required
+                  onchange="handleCategoryDropdownChange(this.value)"
+                  class="w-full px-3.5 py-2.5 border rounded-2xl focus:outline-none bg-stone-50 font-medium"
+                >
+                  <!-- Populated dynamically via JS from CATEGORY_OPTIONS -->
+                </select>
+              </div>
+              <div>
+                <label class="block font-semibold text-stone-700 mb-1"
+                  >Satuan Paket</label
+                >
+                <select
+                  id="crudProductUnit"
+                  class="w-full px-3.5 py-2.5 border rounded-2xl focus:outline-none bg-stone-50"
+                >
+                  <option value="per 10 pcs">per 10 pcs</option>
+                  <option value="per pcs">per pcs</option>
+                  <option value="per 5 pcs">per 5 pcs</option>
+                  <option value="per 20 pcs">per 20 pcs</option>
+                  <option value="per 50 pcs">per 50 pcs</option>
+                  <option value="per 100 pcs">per 100 pcs</option>
+                  <option value="per 100.000 Koin">per 100.000 Koin</option>
+                  <option value="per Jasa Paket">per Jasa Paket</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Custom Category Input -->
+            <div
+              id="customCategoryInputGroup"
+              class="hidden bg-amber-50 p-3 rounded-2xl border border-amber-300"
+            >
+              <label class="block text-xs font-bold text-amber-900 mb-1"
+                >Ketik Nama Kategori Baru:</label
+              >
+              <input
+                type="text"
+                id="crudCustomCategoryName"
+                placeholder="Contoh: Tanaman Langka / Dekorasi Kebun"
+                class="w-full px-3 py-2 border rounded-xl bg-white text-xs focus:outline-none focus:ring-2 focus:ring-amber-600"
+              />
+              <span class="text-[10px] text-stone-500 mt-1 block italic"
+                >*Kategori baru otomatis muncul di filter pilihan pembeli.</span
+              >
+            </div>
+          </div>
+
+          <!-- IMAGE UPLOAD & URL SECTION -->
+          <div
+            class="bg-amber-50/70 p-4 rounded-3xl border-2 border-amber-200 space-y-3"
+          >
+            <label class="block font-bold text-farm-woodDark text-sm">
+              <i class="fa-solid fa-image text-amber-700 mr-1"></i> Foto /
+              Gambar Produk Hay Day <span class="text-red-500">*</span>
+            </label>
+
+            <div class="flex flex-col sm:flex-row gap-4 items-center">
+              <!-- Image Live Preview Box -->
+              <div
+                class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-white border-2 border-amber-300 shadow-inner flex items-center justify-center overflow-hidden flex-shrink-0 p-1 relative"
+              >
+                <img
+                  id="crudImagePreview"
+                  src="https://placehold.co/120x120/faebd7/8b5a2b?text=Foto+Item"
+                  alt="Preview Gambar"
+                  class="w-full h-full object-contain"
+                  onerror="
+                    this.src =
+                      'https://placehold.co/120x120/faebd7/8b5a2b?text=No+Image'
+                  "
+                />
+              </div>
+
+              <!-- Upload Inputs Options -->
+              <div class="flex-1 w-full space-y-2">
+                <div>
+                  <span class="text-xs font-semibold text-stone-600 block mb-1"
+                    >Opsi 1: Upload dari Galeri / Komputer</span
+                  >
+                  <input
+                    type="file"
+                    id="crudFileInput"
+                    accept="image/*"
+                    onchange="handleImageFileSelect(event)"
+                    class="block w-full text-xs text-stone-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-fredoka file:bg-farm-wood file:text-white hover:file:bg-farm-woodDark cursor-pointer"
+                  />
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <div class="flex-1 h-px bg-amber-200"></div>
+                  <span class="text-[10px] uppercase font-bold text-stone-400"
+                    >Atau</span
+                  >
+                  <div class="flex-1 h-px bg-amber-200"></div>
+                </div>
+
+                <div>
+                  <span class="text-xs font-semibold text-stone-600 block mb-1"
+                    >Opsi 2: Masukkan Link Gambar (URL)</span
+                  >
+                  <input
+                    type="url"
+                    id="crudImageUrl"
+                    placeholder="https://contoh.com/gambar-item.png"
+                    oninput="handleImageUrlInput(this.value)"
+                    class="w-full px-3 py-1.5 border border-stone-300 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-farm-green"
+                  />
+                </div>
+              </div>
+            </div>
+            <span class="text-[11px] text-stone-500 block italic"
+              >Format didukung: JPG, PNG, WEBP. Gambar otomatis tersimpan aman
+              di browser.</span
+            >
+          </div>
+
+          <!-- Price & Stock -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block font-semibold text-stone-700 mb-1"
+                >Harga (Rupiah) <span class="text-red-500">*</span></label
+              >
+              <input
+                type="number"
+                id="crudProductPrice"
+                required
+                min="100"
+                step="100"
+                placeholder="3500"
+                class="w-full px-3.5 py-2.5 border rounded-2xl focus:outline-none"
+              />
+            </div>
+            <div>
+              <label class="block font-semibold text-stone-700 mb-1"
+                >Jumlah Stok <span class="text-red-500">*</span></label
+              >
+              <input
+                type="number"
+                id="crudProductStock"
+                required
+                min="0"
+                placeholder="50"
+                class="w-full px-3.5 py-2.5 border rounded-2xl focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <!-- Visibility Status -->
+          <div>
+            <label class="block font-semibold text-stone-700 mb-1"
+              >Status Penjualan</label
+            >
+            <select
+              id="crudProductActive"
+              class="w-full px-3.5 py-2.5 border rounded-2xl focus:outline-none bg-stone-50"
+            >
+              <option value="true">Aktif (Tampilkan di Toko Pembeli)</option>
+              <option value="false">Sembunyikan dari Toko</option>
+            </select>
+          </div>
+
+          <!-- Description -->
+          <div>
+            <label class="block font-semibold text-stone-700 mb-1"
+              >Deskripsi Singkat</label
+            >
+            <input
+              type="text"
+              id="crudProductDesc"
+              placeholder="Contoh: Komponen wajib upgrade kapasitas lumbung..."
+              class="w-full px-3.5 py-2.5 border rounded-2xl focus:outline-none"
+            />
+          </div>
+
+          <div class="pt-2 flex gap-2">
+            <button
+              type="button"
+              onclick="closeProductCrudModal()"
+              class="w-1/2 py-2.5 border border-stone-300 rounded-2xl text-stone-600 font-semibold"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              class="w-1/2 bg-farm-wood hover:bg-farm-woodDark text-white py-2.5 rounded-2xl font-fredoka font-bold shadow-hayday"
+            >
+              Simpan Produk
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL: PENGATURAN TOKO (ADMIN SETTINGS)        -->
+    <!-- ============================================== -->
+    <div
+      id="settingsModal"
+      class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-3xl border-4 border-amber-800 max-w-md w-full p-6 shadow-2xl"
+      >
+        <div
+          class="flex items-center justify-between pb-3 border-b border-stone-200 mb-4"
+        >
+          <h3
+            class="font-fredoka text-2xl font-bold text-farm-woodDark flex items-center gap-2"
+          >
+            <span>⚙️ Pengaturan Toko Admin</span>
+          </h3>
+          <button
+            onclick="closeSettingsModal()"
+            class="text-stone-400 hover:text-stone-700 text-xl"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <form
+          id="shopSettingsForm"
+          onsubmit="handleSettingsSubmit(event)"
+          class="space-y-4 text-sm"
+        >
+          <div>
+            <label class="block font-semibold text-stone-700 mb-1"
+              >Tag Hay Day Toko Admin</label
+            >
+            <div class="relative">
+              <span
+                class="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-stone-400"
+                >#</span
+              >
+              <input
+                type="text"
+                id="settingAdminTag"
+                required
+                class="w-full pl-8 pr-3 py-2 border rounded-xl font-mono uppercase focus:outline-none"
+              />
+            </div>
+            <span class="text-[11px] text-stone-400"
+              >Tag ini yang akan dicopy pembeli untuk add friend.</span
+            >
+          </div>
+
+          <div>
+            <label class="block font-semibold text-stone-700 mb-1"
+              >Nomor WhatsApp Admin</label
+            >
+            <input
+              type="tel"
+              id="settingAdminWa"
+              required
+              placeholder="6281234567890"
+              class="w-full px-3 py-2 border rounded-xl focus:outline-none"
+            />
+            <span class="text-[11px] text-stone-400"
+              >Format internasional tanpa spasi (628xxxx).</span
+            >
+          </div>
+
+          <div>
+            <label class="block font-semibold text-stone-700 mb-1"
+              >PIN Akses Admin Baru</label
+            >
+            <input
+              type="password"
+              id="settingAdminPin"
+              placeholder="Kosongkan jika tidak ganti PIN"
+              class="w-full px-3 py-2 border rounded-xl focus:outline-none"
+            />
+          </div>
+
+          <div class="pt-2 flex gap-2">
+            <button
+              type="button"
+              onclick="closeSettingsModal()"
+              class="w-1/2 py-2.5 border border-stone-300 rounded-xl text-stone-600 font-semibold"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              class="w-1/2 bg-farm-wood hover:bg-farm-woodDark text-white py-2.5 rounded-xl font-fredoka font-bold shadow-hayday"
+            >
+              Simpan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer
+      class="mt-12 bg-amber-950 text-amber-200 text-xs py-8 border-t-4 border-amber-900"
+    >
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 bg-amber-400 text-stone-900 rounded-2xl flex items-center justify-center font-bold text-xl"
+          >
+            🌾
+          </div>
+          <div>
+            <p class="font-fredoka font-bold text-amber-100 text-base">
+              Hay Day Market Indonesia
+            </p>
+            <p class="text-amber-400/80">
+              Pasar lumbung, silo & perlengkapan bertani terpercaya
+            </p>
+          </div>
+        </div>
+        <div class="text-stone-400">
+          <p>
+            Aplikasi web interaktif jual beli item Hay Day dengan pemisahan
+            riwayat pesanan berbasis device.
+          </p>
+          <p class="mt-0.5">
+            Hay Day adalah merek dagang dari Supercell. Website ini dibuat untuk
+            komunitas gamer.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const BASE_CATEGORIES = [
+        { id: "ALL", name: "Semua Item", icon: "🌾" },
+        { id: "Alat Lumbung (Barn)", name: "Alat Lumbung (Barn)", icon: "🪵" },
+        { id: "Alat Silo", name: "Alat Silo", icon: "📍" },
+        { id: "Perluasan Lahan", name: "Perluasan Lahan", icon: "📜" },
+        {
+          id: "Alat Tambang & Tebang",
+          name: "Alat Tambang & Tebang",
+          icon: "🪓",
+        },
+        { id: "Bahan Baku & Gula", name: "Bahan Baku & Gula", icon: "🥛" },
+        { id: "Kue, Pie & Makanan", name: "Kue, Pie & Makanan", icon: "🍰" },
+        {
+          id: "Perhiasan & Logam Mulia",
+          name: "Perhiasan & Logam Mulia",
+          icon: "💍",
+        },
+        {
+          id: "Umpan & Hasil Pancing",
+          name: "Umpan & Hasil Pancing",
+          icon: "🎣",
+        },
+        {
+          id: "Produk Mesin Lainnya",
+          name: "Produk Mesin Lainnya",
+          icon: "☕",
+        },
+        { id: "Koin & Jasa Bantu", name: "Koin & Jasa Bantu", icon: "🪙" },
+      ];
+
+      const DEFAULT_PRODUCTS = [
+        {
+          id: "HD-101",
+          name: "Baut (Bolt)",
+          category: "Alat Lumbung (Barn)",
+          image:
+            "https://static.wikia.nocookie.net/hayday/images/1/14/Bolt.png",
+          price: 3500,
+          unit: "per 10 pcs",
+          stock: 90,
+          active: true,
+          desc: "Material utama upgrade kapasitas Lumbung (Barn).",
+        },
+        {
+          id: "HD-102",
+          name: "Papan Kayu (Plank)",
+          category: "Alat Lumbung (Barn)",
+          image:
+            "https://static.wikia.nocookie.net/hayday/images/c/c5/Plank.png",
+          price: 3500,
+          unit: "per 10 pcs",
+          stock: 60,
+          active: true,
+          desc: "Upgrade lumbung bersama baut dan lakban.",
+        },
+        {
+          id: "HD-103",
+          name: "Lakban (Duct Tape)",
+          category: "Alat Lumbung (Barn)",
+          image:
+            "https://static.wikia.nocookie.net/hayday/images/3/36/Duct_Tape.png",
+          price: 4000,
+          unit: "per 10 pcs",
+          stock: 40,
+          active: true,
+          desc: "Material paling dicari untuk memperbesar lumbung panen.",
+        },
+        {
+          id: "HD-104",
+          name: "Paku Biasa (Nail)",
+          category: "Alat Silo",
+          image:
+            "https://static.wikia.nocookie.net/hayday/images/2/27/Box_of_Nails.png",
+          price: 3000,
+          unit: "per 10 pcs",
+          stock: 120,
+          active: true,
+          desc: "Material penting upgrade Silo penyimpanan hasil panen.",
+        },
+        {
+          id: "HD-105",
+          name: "Sekrup (Screw)",
+          category: "Alat Silo",
+          image:
+            "https://static.wikia.nocookie.net/hayday/images/6/60/Screw.png",
+          price: 3000,
+          unit: "per 10 pcs",
+          stock: 80,
+          active: true,
+          desc: "Komponen penting silo agar muat ribuan gandum dan jagung.",
+        },
+        {
+          id: "HD-106",
+          name: "Paku Panel (Wood Panel)",
+          category: "Alat Silo",
+          image:
+            "https://static.wikia.nocookie.net/hayday/images/c/c3/Wood_Panel.png",
+          price: 3500,
+          unit: "per 10 pcs",
+          stock: 50,
+          active: true,
+          desc: "Panel kayu penutup silo penyimpanan tanaman.",
+        },
+        {
+          id: "HD-107",
+          name: "Akta Tanah (Land Deed)",
+          category: "Perluasan Lahan",
+          image:
+            "https://static.wikia.nocookie.net/hayday/images/1/18/Land_Deed.png",
+          price: 4000,
+          unit: "per 10 pcs",
+          stock: 70,
+          active: true,
+          desc: "Perluas area peternakan & zona pemancingan kebunmu.",
+        },
+        {
+          id: "HD-108",
+          name: "Patok Pembatas (Marker Stake)",
+          category: "Perluasan Lahan",
+          image:
+            "https://static.wikia.nocookie.net/hayday/images/4/4b/Marker_Stake.png",
+          price: 3500,
+          unit: "per 10 pcs",
+          stock: 90,
+          active: true,
+          desc: "Tanda batas kavling ekspansi lahan perkebunan baru.",
+        },
+        {
+          id: "HD-109",
+          name: "Palu Kayu (Mallet)",
+          category: "Perluasan Lahan",
+          image:
+            "https://static.wikia.nocookie.net/hayday/images/c/ca/Mallet.png",
+          price: 3500,
+          unit: "per 10 pcs",
+          stock: 30,
+          active: true,
+          desc: "Palu perata patok lahan kebun baru.",
+        },
+        {
+          id: "HD-110",
+          name: "Kapak Pohon (Axe)",
+          category: "Alat Tambang & Tebang",
+          image: "https://static.wikia.nocookie.net/hayday/images/7/75/Axe.png",
+          price: 2500,
+          unit: "per 10 pcs",
+          stock: 150,
+          active: true,
+          desc: "Tebang pohon buah apel & semak berry yang telah kering.",
+        },
+        {
+          id: "HD-111",
+          name: "Gergaji Mesin (Saw)",
+          category: "Alat Tambang & Tebang",
+          image: "https://static.wikia.nocookie.net/hayday/images/1/1d/Saw.png",
+          price: 3000,
+          unit: "per 10 pcs",
+          stock: 110,
+          active: true,
+          desc: "Tebang pohon pinus & pohon besar penghalang farm.",
+        },
+        {
+          id: "HD-112",
+          name: "Dinamit Tambang (Dynamite)",
+          category: "Alat Tambang & Tebang",
+          image:
+            "https://static.wikia.nocookie.net/hayday/images/6/67/Dynamite.png",
+          price: 4500,
+          unit: "per 20 pcs",
+          stock: 25,
+          active: true,
+          desc: "Ledakkan tambang untuk peroleh emas, perak, dan bijih mineral.",
+        },
+        {
+          id: "HD-113",
+          name: "Gula Putih (White Sugar)",
+          category: "Bahan Baku & Gula",
+          image:
+            "https://static.wikia.nocookie.net/hayday/images/1/10/White_Sugar.png",
+          price: 6000,
+          unit: "per 20 pcs",
+          stock: 35,
+          active: true,
+          desc: "Bahan dasar olahan kue, sirup kopi, es krim, dan pesanan kapal.",
+        },
+        {
+          id: "HD-114",
+          name: "Kue Wortel (Carrot Cake)",
+          category: "Kue, Pie & Makanan",
+          image:
+            "https://static.wikia.nocookie.net/hayday/images/6/6d/Carrot_Cake.png",
+          price: 7500,
+          unit: "per 10 pcs",
+          stock: 18,
+          active: true,
+          desc: "Olahan oven bernilai koin dan XP tinggi.",
+        },
+        {
+          id: "HD-115",
+          name: "Cincin Berlian (Diamond Ring)",
+          category: "Perhiasan & Logam Mulia",
+          image:
+            "https://static.wikia.nocookie.net/hayday/images/c/c3/Diamond_Ring.png",
+          price: 15000,
+          unit: "per 10 pcs",
+          stock: 20,
+          active: true,
+          desc: "Perhiasan mewah penghasil koin tertinggi dari pesanan truk.",
+        },
+        {
+          id: "HD-116",
+          name: "Umpan Hijau (Green Lure)",
+          category: "Umpan & Hasil Pancing",
+          image:
+            "https://static.wikia.nocookie.net/hayday/images/8/86/Green_Lure.png",
+          price: 5000,
+          unit: "per 5 pcs",
+          stock: 45,
+          active: true,
+          desc: "Umpan pancing khusus ikan salmon dan ikan berkategori langka.",
+        },
+      ];
+
+      const DEFAULT_SETTINGS = {
+        adminTag: "P9QL88V2Y",
+        adminWa: "6281234567890",
+        adminPin: "1234",
+      };
+
+      let currentRole = "buyer";
+      let currentCategory = "ALL";
+      let products = [];
+      let orders = [];
+      let cart = [];
+      let shopSettings = {};
+      let tempActiveImageSource = "";
+      let myDeviceId = ""; // Unique identifier for this specific browser/device
+
+      function getOrCreateDeviceId() {
+        let storedId = localStorage.getItem("hayday_client_device_id_v1");
+        if (!storedId) {
+          if (typeof crypto !== "undefined" && crypto.randomUUID) {
+            storedId =
+              "DEV-" + crypto.randomUUID().substring(0, 8).toUpperCase();
+          } else {
+            storedId =
+              "DEV-" +
+              Math.random().toString(36).substring(2, 10).toUpperCase();
+          }
+          localStorage.setItem("hayday_client_device_id_v1", storedId);
+        }
+        return storedId;
+      }
+
+      function initAppState() {
+        myDeviceId = getOrCreateDeviceId();
+        document.getElementById("modalCurrentDeviceId").textContent =
+          myDeviceId;
+        document.getElementById("checkoutDeviceIdBadge").textContent =
+          myDeviceId;
+
+        // Load Products
+        const storedProducts = localStorage.getItem("hayday_products_v4");
+        if (storedProducts) {
+          try {
+            products = JSON.parse(storedProducts);
+          } catch (e) {
+            products = DEFAULT_PRODUCTS;
+          }
+        } else {
+          products = DEFAULT_PRODUCTS;
+          saveProducts();
+        }
+
+        // Load Orders (Global pool across devices)
+        const storedOrders = localStorage.getItem("hayday_orders_v4");
+        if (storedOrders) {
+          try {
+            orders = JSON.parse(storedOrders);
+          } catch (e) {
+            orders = [];
+          }
+        } else {
+          // Dummy order tagged to a demo device
+          orders = [
+            {
+              orderId: "HD-ORD-9021",
+              deviceId: "DEV-DEMO99",
+              createdAt: "2026-09-17 14:30",
+              playerTag: "8YPJ99L0",
+              farmName: "Kebun Stroberi Mbak Sri",
+              whatsapp: "081234567891",
+              items: [
+                {
+                  id: "HD-103",
+                  name: "Lakban (Duct Tape)",
+                  qty: 2,
+                  price: 4000,
+                  unit: "per 10 pcs",
+                  image:
+                    "https://static.wikia.nocookie.net/hayday/images/3/36/Duct_Tape.png",
+                },
+                {
+                  id: "HD-101",
+                  name: "Baut (Bolt)",
+                  qty: 2,
+                  price: 3500,
+                  unit: "per 10 pcs",
+                  image:
+                    "https://static.wikia.nocookie.net/hayday/images/1/14/Bolt.png",
+                },
+              ],
+              totalPrice: 15000,
+              paymentMethod: "QRIS (Semua E-Wallet / Mobile Banking)",
+              notes: "Bisa on jam 7 malam ya kak",
+              status: "PAID",
+            },
+          ];
+          saveOrders();
+        }
+
+        // Load Settings
+        const storedSettings = localStorage.getItem("hayday_settings_v4");
+        if (storedSettings) {
+          try {
+            shopSettings = JSON.parse(storedSettings);
+          } catch (e) {
+            shopSettings = DEFAULT_SETTINGS;
+          }
+        } else {
+          shopSettings = DEFAULT_SETTINGS;
+          saveSettings();
+        }
+
+        // Load Cart for this device
+        const storedCart = localStorage.getItem("hayday_cart_v4");
+        if (storedCart) {
+          try {
+            cart = JSON.parse(storedCart);
+          } catch (e) {
+            cart = [];
+          }
+        }
+
+        updateHeaderSettingsInfo();
+        refreshCategorySelectDropdowns();
+        renderCategoryPills();
+        renderBuyerProducts();
+        updateCartBadge();
+        updateMyOrdersBadge();
+      }
+
+      function saveProducts() {
+        localStorage.setItem("hayday_products_v4", JSON.stringify(products));
+        refreshCategorySelectDropdowns();
+        renderCategoryPills();
+      }
+
+      function saveOrders() {
+        localStorage.setItem("hayday_orders_v4", JSON.stringify(orders));
+        updateMyOrdersBadge();
+      }
+
+      function saveSettings() {
+        localStorage.setItem(
+          "hayday_settings_v4",
+          JSON.stringify(shopSettings),
+        );
+        updateHeaderSettingsInfo();
+      }
+
+      function saveCart() {
+        localStorage.setItem("hayday_cart_v4", JSON.stringify(cart));
+        updateCartBadge();
+      }
+
+      function updateHeaderSettingsInfo() {
+        document.getElementById("headerAdminTag").textContent =
+          "#" + (shopSettings.adminTag || "P9QL88V2Y");
+      }
+
+      function updateMyOrdersBadge() {
+        const myOrders = orders.filter((o) => o.deviceId === myDeviceId);
+        const badge = document.getElementById("myOrdersCountBadge");
+        if (badge) {
+          badge.textContent = myOrders.length;
+        }
+      }
+
+      function showToast(message, type = "success") {
+        const container = document.getElementById("toastContainer");
+        const toast = document.createElement("div");
+
+        let bg = "bg-farm-green text-white";
+        let icon = "fa-circle-check";
+        if (type === "error") {
+          bg = "bg-farm-barnRed text-white";
+          icon = "fa-circle-xmark";
+        } else if (type === "info") {
+          bg = "bg-farm-woodDark text-amber-100";
+          icon = "fa-circle-info";
+        }
+
+        toast.className = `${bg} px-4 py-3 rounded-2xl shadow-lg flex items-center gap-3 text-sm font-fredoka pointer-events-auto transition-all duration-300 transform translate-x-full border-2 border-white/20`;
+        toast.innerHTML = `<i class="fa-solid ${icon} text-lg"></i> <span>${message}</span>`;
+
+        container.appendChild(toast);
+
+        setTimeout(() => toast.classList.remove("translate-x-full"), 20);
+        setTimeout(() => {
+          toast.classList.add("translate-x-full", "opacity-0");
+          setTimeout(() => toast.remove(), 300);
+        }, 3500);
+      }
+
+      function formatRupiah(number) {
+        return new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+          maximumFractionDigits: 0,
+        }).format(number);
+      }
+
+      function getAllAvailableCategories() {
+        const set = new Set();
+        BASE_CATEGORIES.forEach((c) => {
+          if (c.id !== "ALL") set.add(c.id);
+        });
+        products.forEach((p) => {
+          if (p.category) set.add(p.category);
+        });
+        return Array.from(set);
+      }
+
+      function getCategoryIcon(catName) {
+        const found = BASE_CATEGORIES.find((c) => c.id === catName);
+        if (found) return found.icon;
+        return "📦";
+      }
+
+      function getCategoryBadgeColor(catName) {
+        if (catName.includes("Lumbung"))
+          return "bg-amber-100 text-amber-900 border-amber-300";
+        if (catName.includes("Silo"))
+          return "bg-blue-100 text-blue-900 border-blue-300";
+        if (catName.includes("Lahan"))
+          return "bg-yellow-100 text-yellow-900 border-yellow-300";
+        if (catName.includes("Tambang") || catName.includes("Tebang"))
+          return "bg-red-100 text-red-900 border-red-300";
+        if (catName.includes("Gula") || catName.includes("Bahan"))
+          return "bg-emerald-100 text-emerald-900 border-emerald-300";
+        if (catName.includes("Kue") || catName.includes("Makanan"))
+          return "bg-orange-100 text-orange-900 border-orange-300";
+        if (catName.includes("Perhiasan") || catName.includes("Logam"))
+          return "bg-purple-100 text-purple-900 border-purple-300";
+        if (catName.includes("Pancing") || catName.includes("Umpan"))
+          return "bg-cyan-100 text-cyan-900 border-cyan-300";
+        if (catName.includes("Koin") || catName.includes("Jasa"))
+          return "bg-lime-100 text-lime-900 border-lime-300";
+        return "bg-stone-100 text-stone-700 border-stone-300";
+      }
+
+      function refreshCategorySelectDropdowns() {
+        const allCats = getAllAvailableCategories();
+
+        const modalSelect = document.getElementById("crudProductCategory");
+        if (modalSelect) {
+          let optionsHtml = "";
+          allCats.forEach((cat) => {
+            optionsHtml += `<option value="${cat}">${getCategoryIcon(cat)} ${cat}</option>`;
+          });
+          optionsHtml += `<option value="CUSTOM">➕ Kategori Kustom / Lainnya...</option>`;
+          modalSelect.innerHTML = optionsHtml;
+        }
+
+        const tableFilter = document.getElementById(
+          "adminProductFilterCategory",
+        );
+        if (tableFilter) {
+          let currentVal = tableFilter.value || "ALL";
+          let filterHtml = `<option value="ALL">Semua Kategori (${products.length})</option>`;
+          allCats.forEach((cat) => {
+            const count = products.filter((p) => p.category === cat).length;
+            filterHtml += `<option value="${cat}">${cat} (${count})</option>`;
+          });
+          tableFilter.innerHTML = filterHtml;
+          tableFilter.value = allCats.includes(currentVal) ? currentVal : "ALL";
+        }
+      }
+
+      function handleCategoryDropdownChange(val) {
+        const customGroup = document.getElementById("customCategoryInputGroup");
+        const customInput = document.getElementById("crudCustomCategoryName");
+        if (val === "CUSTOM") {
+          customGroup.classList.remove("hidden");
+          customInput.focus();
+        } else {
+          customGroup.classList.add("hidden");
+          customInput.value = "";
+        }
+      }
+
+      function renderCategoryPills() {
+        const container = document.getElementById("categoryPillContainer");
+        const allCats = getAllAvailableCategories();
+
+        const pillList = [
+          { id: "ALL", name: "Semua Item", icon: "🌾" },
+          ...allCats.map((cat) => ({
+            id: cat,
+            name: cat,
+            icon: getCategoryIcon(cat),
+          })),
+        ];
+
+        container.innerHTML = pillList
+          .map((cat) => {
+            const isActive = currentCategory === cat.id;
+            const count =
+              cat.id === "ALL"
+                ? products.filter((p) => p.active).length
+                : products.filter((p) => p.active && p.category === cat.id)
+                    .length;
+
+            const activeClass = isActive
+              ? "bg-farm-woodDark text-amber-100 border-farm-woodDark shadow-md scale-105"
+              : "bg-white text-stone-700 border-amber-200 hover:bg-amber-50";
+
+            return `
+          <button 
+            onclick="setCategory('${cat.id}')" 
+            class="px-4 py-2 rounded-2xl border-2 font-fredoka font-semibold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-2 ${activeClass}">
+            <span>${cat.icon}</span>
+            <span>${cat.name}</span>
+            <span class="text-[10px] px-1.5 py-0.2 rounded-full ${isActive ? "bg-amber-800 text-amber-200" : "bg-stone-200 text-stone-700"}">${count}</span>
+          </button>
+        `;
+          })
+          .join("");
+      }
+
+      function setCategory(catId) {
+        currentCategory = catId;
+        renderCategoryPills();
+        renderBuyerProducts();
+      }
+
+      function resetFilters() {
+        currentCategory = "ALL";
+        document.getElementById("searchInput").value = "";
+        document.getElementById("onlyInStockCheckbox").checked = false;
+        renderCategoryPills();
+        renderBuyerProducts();
+      }
+
+      function renderBuyerProducts() {
+        const grid = document.getElementById("buyerProductGrid");
+        const emptyState = document.getElementById("noProductsFound");
+        const countBadge = document.getElementById("productCountBadge");
+
+        const searchTerm = (
+          document.getElementById("searchInput")?.value || ""
+        ).toLowerCase();
+        const onlyInStock =
+          document.getElementById("onlyInStockCheckbox")?.checked || false;
+
+        const filtered = products.filter((p) => {
+          if (!p.active) return false;
+          if (currentCategory !== "ALL" && p.category !== currentCategory)
+            return false;
+          if (onlyInStock && p.stock <= 0) return false;
+          if (
+            searchTerm &&
+            !p.name.toLowerCase().includes(searchTerm) &&
+            !p.desc.toLowerCase().includes(searchTerm)
+          )
+            return false;
+          return true;
+        });
+
+        countBadge.textContent = `${filtered.length} barang`;
+
+        if (filtered.length === 0) {
+          grid.innerHTML = "";
+          emptyState.classList.remove("hidden");
+          return;
+        } else {
+          emptyState.classList.add("hidden");
+        }
+
+        grid.innerHTML = filtered
+          .map((item) => {
+            const isOutOfStock = item.stock <= 0;
+            const fallbackImg = `https://placehold.co/150x150/faebd7/8b5a2b?text=${encodeURIComponent(item.name)}`;
+
+            return `
+          <div class="bg-white rounded-3xl p-4 border-2 border-amber-200 shadow-sm hover:shadow-lg transition-all flex flex-col justify-between relative overflow-hidden group">
+            
+            ${
+              isOutOfStock
+                ? `
+              <div class="absolute top-3 right-3 bg-red-500 text-white text-[10px] font-fredoka font-bold px-2.5 py-0.5 rounded-full shadow z-10">
+                HABIS
+              </div>
+            `
+                : `
+              <div class="absolute top-3 right-3 bg-emerald-100 text-emerald-800 text-[11px] font-fredoka font-bold px-2.5 py-0.5 rounded-full shadow-sm z-10">
+                Stok: ${item.stock}
+              </div>
+            `
+            }
+
+            <!-- Real Product Image Display -->
+            <div class="item-image-wrapper w-full h-40 rounded-2xl border-2 border-amber-100 flex items-center justify-center p-3 mb-3 relative overflow-hidden shadow-inner">
+              <img 
+                src="${item.image || fallbackImg}" 
+                alt="${item.name}" 
+                class="max-h-full max-w-full object-contain filter drop-shadow-md group-hover:scale-110 transition-transform duration-300"
+                onerror="this.onerror=null; this.src='${fallbackImg}';"
+                loading="lazy"
+              >
+            </div>
+
+            <!-- Title & Category Badge -->
+            <div class="mb-2">
+              <span class="text-[10px] uppercase font-bold px-2.5 py-0.5 rounded-md inline-block mb-1 border ${getCategoryBadgeColor(item.category)}">
+                ${getCategoryIcon(item.category)} ${item.category}
+              </span>
+              <h3 class="font-fredoka font-bold text-stone-800 text-base sm:text-lg leading-tight truncate" title="${item.name}">
+                ${item.name}
+              </h3>
+            </div>
+
+            <!-- Description -->
+            <p class="text-xs text-stone-500 mb-4 line-clamp-2 min-h-[32px]">
+              ${item.desc || "Material resmi Hay Day siap dikirim ke Roadside Shop."}
+            </p>
+
+            <!-- Price & Add to Cart -->
+            <div class="pt-3 border-t border-amber-100 flex items-center justify-between">
+              <div>
+                <span class="text-[11px] text-stone-400 block">${item.unit}</span>
+                <span class="font-fredoka font-bold text-emerald-700 text-lg">
+                  ${formatRupiah(item.price)}
+                </span>
+              </div>
+
+              <button 
+                onclick="addToCart('${item.id}')"
+                ${isOutOfStock ? "disabled" : ""}
+                class="bg-farm-wood hover:bg-farm-woodDark disabled:bg-stone-300 disabled:cursor-not-allowed text-white font-fredoka font-semibold px-3.5 py-2 rounded-xl text-xs sm:text-sm shadow-hayday active:translate-y-1 transition-all flex items-center gap-1.5"
+              >
+                <i class="fa-solid fa-cart-plus"></i>
+                <span>${isOutOfStock ? "Habis" : "Beli"}</span>
+              </button>
+            </div>
+
+          </div>
+        `;
+          })
+          .join("");
+      }
+
+      function updateCartBadge() {
+        const badge = document.getElementById("cartCountBadge");
+        const totalQty = cart.reduce((acc, item) => acc + item.qty, 0);
+        badge.textContent = totalQty;
+      }
+
+      function addToCart(productId) {
+        const product = products.find((p) => p.id === productId);
+        if (!product || product.stock <= 0) {
+          showToast("Stok item ini sedang habis!", "error");
+          return;
+        }
+
+        const existing = cart.find((c) => c.productId === productId);
+        if (existing) {
+          if (existing.qty + 1 > product.stock) {
+            showToast(
+              `Maksimal stok tersedia hanya ${product.stock}!`,
+              "error",
+            );
+            return;
+          }
+          existing.qty += 1;
+        } else {
+          cart.push({ productId, qty: 1 });
+        }
+
+        saveCart();
+        showToast(`${product.name} dimasukkan ke keranjang!`);
+      }
+
+      function openCartModal() {
+        renderCartItems();
+        document.getElementById("cartModal").classList.remove("hidden");
+      }
+
+      function closeCartModal() {
+        document.getElementById("cartModal").classList.add("hidden");
+      }
+
+      function renderCartItems() {
+        const container = document.getElementById("cartItemsContainer");
+        const emptyState = document.getElementById("cartEmptyState");
+        const footer = document.getElementById("cartFooter");
+        const totalPriceEl = document.getElementById("cartTotalPrice");
+
+        if (cart.length === 0) {
+          container.innerHTML = "";
+          emptyState.classList.remove("hidden");
+          footer.classList.add("hidden");
+          return;
+        }
+
+        emptyState.classList.add("hidden");
+        footer.classList.remove("hidden");
+
+        let grandTotal = 0;
+
+        container.innerHTML = cart
+          .map((item) => {
+            const p = products.find((prod) => prod.id === item.productId);
+            if (!p) return "";
+            const itemSubtotal = p.price * item.qty;
+            grandTotal += itemSubtotal;
+            const fallbackImg = `https://placehold.co/80x80/faebd7/8b5a2b?text=${encodeURIComponent(p.name)}`;
+
+            return `
+          <div class="bg-stone-50 p-3 rounded-2xl border border-stone-200 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-14 h-14 bg-white rounded-xl border border-amber-200 p-1 flex items-center justify-center flex-shrink-0">
+                <img src="${p.image || fallbackImg}" alt="${p.name}" class="w-full h-full object-contain" onerror="this.src='${fallbackImg}';">
+              </div>
+              <div>
+                <h4 class="font-fredoka font-bold text-stone-800 text-sm">${p.name}</h4>
+                <span class="text-xs text-stone-500">${formatRupiah(p.price)} / ${p.unit}</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <div class="flex items-center border border-stone-300 rounded-xl bg-white overflow-hidden shadow-sm">
+                <button onclick="changeCartQty('${p.id}', -1)" class="px-2.5 py-1 text-stone-600 hover:bg-stone-100 font-bold">-</button>
+                <span class="px-2 font-fredoka text-xs font-bold text-stone-800">${item.qty}</span>
+                <button onclick="changeCartQty('${p.id}', 1)" class="px-2.5 py-1 text-stone-600 hover:bg-stone-100 font-bold">+</button>
+              </div>
+
+              <div class="text-right min-w-[80px]">
+                <p class="font-fredoka font-bold text-emerald-700 text-xs sm:text-sm">${formatRupiah(itemSubtotal)}</p>
+                <button onclick="removeFromCart('${p.id}')" class="text-[11px] text-red-500 hover:underline font-semibold">Hapus</button>
+              </div>
+            </div>
+          </div>
+        `;
+          })
+          .join("");
+
+        totalPriceEl.textContent = formatRupiah(grandTotal);
+      }
+
+      function changeCartQty(productId, delta) {
+        const item = cart.find((c) => c.productId === productId);
+        const prod = products.find((p) => p.id === productId);
+        if (!item || !prod) return;
+
+        const newQty = item.qty + delta;
+        if (newQty <= 0) {
+          removeFromCart(productId);
+          return;
+        }
+        if (newQty > prod.stock) {
+          showToast(`Maksimal stok tersedia hanya ${prod.stock}`, "error");
+          return;
+        }
+
+        item.qty = newQty;
+        saveCart();
+        renderCartItems();
+      }
+
+      function removeFromCart(productId) {
+        cart = cart.filter((c) => c.productId !== productId);
+        saveCart();
+        renderCartItems();
+        showToast("Item dihapus dari keranjang", "info");
+      }
+
+      function clearCart() {
+        cart = [];
+        saveCart();
+        renderCartItems();
+      }
+
+      function openCheckoutModal() {
+        if (cart.length === 0) return;
+        closeCartModal();
+
+        let total = 0;
+        let totalQty = 0;
+        cart.forEach((c) => {
+          const p = products.find((item) => item.id === c.productId);
+          if (p) {
+            total += p.price * c.qty;
+            totalQty += c.qty;
+          }
+        });
+
+        document.getElementById("checkoutItemCount").textContent =
+          `${totalQty} paket/item (${cart.length} jenis barang)`;
+        document.getElementById("checkoutTotalAmount").textContent =
+          formatRupiah(total);
+        document.getElementById("checkoutDeviceIdBadge").textContent =
+          myDeviceId;
+        document.getElementById("checkoutModal").classList.remove("hidden");
+      }
+
+      function closeCheckoutModal() {
+        document.getElementById("checkoutModal").classList.add("hidden");
+      }
+
+      function handleCheckoutSubmit(e) {
+        e.preventDefault();
+
+        const rawTag = document
+          .getElementById("buyerTagInput")
+          .value.trim()
+          .replace("#", "")
+          .toUpperCase();
+        const farmName = document.getElementById("buyerFarmInput").value.trim();
+        const whatsapp = document
+          .getElementById("buyerWhatsappInput")
+          .value.trim();
+        const paymentMethod = document.getElementById(
+          "paymentMethodSelect",
+        ).value;
+        const notes = document.getElementById("buyerNotesInput").value.trim();
+
+        if (!rawTag || !farmName || !whatsapp) {
+          showToast("Lengkapi semua data bertanda bintang!", "error");
+          return;
+        }
+
+        const orderItems = [];
+        let grandTotal = 0;
+
+        for (let c of cart) {
+          const prod = products.find((p) => p.id === c.productId);
+          if (prod) {
+            if (prod.stock < c.qty) {
+              showToast(
+                `Stok ${prod.name} tersisa ${prod.stock}, periksa keranjang!`,
+                "error",
+              );
+              return;
+            }
+            orderItems.push({
+              id: prod.id,
+              name: prod.name,
+              qty: c.qty,
+              price: prod.price,
+              unit: prod.unit,
+              image: prod.image,
+              category: prod.category,
+            });
+            grandTotal += prod.price * c.qty;
+          }
+        }
+
+        const orderId = "HD-" + Math.floor(100000 + Math.random() * 900000);
+        const now = new Date();
+        const dateStr =
+          now.toISOString().slice(0, 10) + " " + now.toTimeString().slice(0, 5);
+
+        // Order object tagged with client's unique deviceId
+        const newOrder = {
+          orderId,
+          deviceId: myDeviceId, // Attached device ID
+          createdAt: dateStr,
+          playerTag: rawTag,
+          farmName,
+          whatsapp,
+          items: orderItems,
+          totalPrice: grandTotal,
+          paymentMethod,
+          notes,
+          status: "PENDING",
+        };
+
+        // Deduct stock
+        orderItems.forEach((item) => {
+          const p = products.find((x) => x.id === item.id);
+          if (p) {
+            p.stock = Math.max(0, p.stock - item.qty);
+          }
+        });
+        saveProducts();
+
+        // Push to global orders
+        orders.unshift(newOrder);
+        saveOrders();
+
+        // Clear cart
+        cart = [];
+        saveCart();
+
+        closeCheckoutModal();
+        openInvoiceModal(newOrder);
+        showToast("Pesanan berhasil dibuat!");
+      }
+
+      function openInvoiceModal(order) {
+        const container = document.getElementById("invoiceDetailsContainer");
+        const waBtn = document.getElementById("waConfirmBtn");
+
+        container.innerHTML = `
+        <div class="bg-stone-50 p-4 rounded-2xl border border-stone-200 space-y-2">
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-stone-500">ID Pesanan:</span>
+            <span class="font-mono font-bold text-farm-woodDark bg-amber-100 px-2 py-0.5 rounded">${order.orderId}</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-stone-500">Waktu Order:</span>
+            <span class="font-medium text-stone-700">${order.createdAt}</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-stone-500">Tag Pemain Hay Day:</span>
+            <span class="font-mono font-bold text-farm-barnRed select-all">#${order.playerTag}</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-stone-500">Nama Farm:</span>
+            <span class="font-bold text-stone-800">${order.farmName}</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-stone-500">Metode Bayar:</span>
+            <span class="font-semibold text-emerald-800">${order.paymentMethod}</span>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-fredoka font-bold text-stone-700 text-xs uppercase mb-2">Daftar Barang:</h4>
+          <div class="space-y-2">
+            ${order.items
+              .map(
+                (it) => `
+              <div class="flex items-center justify-between text-xs bg-white p-2 rounded-xl border border-stone-200">
+                <div class="flex items-center gap-2">
+                  <img src="${it.image}" alt="${it.name}" class="w-8 h-8 object-contain" onerror="this.src='https://placehold.co/40x40/faebd7/8b5a2b?text=Item';">
+                  <span>${it.name} <strong class="text-farm-wood">x${it.qty}</strong></span>
+                </div>
+                <span class="font-bold text-stone-700">${formatRupiah(it.price * it.qty)}</span>
+              </div>
+            `,
+              )
+              .join("")}
+          </div>
+          <div class="flex justify-between items-center mt-3 pt-2 border-t border-stone-200">
+            <span class="font-fredoka text-stone-800 font-bold">Total Pembayaran:</span>
+            <span class="font-fredoka font-bold text-xl text-emerald-700">${formatRupiah(order.totalPrice)}</span>
+          </div>
+        </div>
+      `;
+
+        let itemSummaryText = order.items
+          .map(
+            (i) => `- ${i.name} x${i.qty} (${formatRupiah(i.price * i.qty)})`,
+          )
+          .join("%0A");
+        let waMessage =
+          `Halo Admin Hay Day Market!%0A` +
+          `Saya ingin konfirmasi pesanan alat/bahan kebun:%0A%0A` +
+          `*ID Pesanan:* ${order.orderId}%0A` +
+          `*Tag Hay Day:* %23${order.playerTag}%0A` +
+          `*Nama Farm:* ${order.farmName}%0A` +
+          `*Metode Bayar:* ${order.paymentMethod}%0A` +
+          `*Total Tagihan:* ${formatRupiah(order.totalPrice)}%0A%0A` +
+          `*Rincian Barang:*%0A${itemSummaryText}%0A%0A` +
+          (order.notes
+            ? `*Catatan:* ${encodeURIComponent(order.notes)}%0A%0A`
+            : "") +
+          `Mohon info Kios Toko ya min. Terima kasih!`;
+
+        const adminWaNumber = (shopSettings.adminWa || "6281234567890").replace(
+          /\D/g,
+          "",
+        );
+        waBtn.href = `https://api.whatsapp.com/send?phone=${adminWaNumber}&text=${waMessage}`;
+
+        document.getElementById("invoiceModal").classList.remove("hidden");
+      }
+
+      function closeInvoiceModal() {
+        document.getElementById("invoiceModal").classList.add("hidden");
+      }
+
+      function openMyOrdersModal() {
+        renderMyDeviceOrders();
+        document.getElementById("myOrdersModal").classList.remove("hidden");
+      }
+
+      function closeMyOrdersModal() {
+        document.getElementById("myOrdersModal").classList.add("hidden");
+      }
+
+      function toggleCrossDeviceSearch() {
+        const el = document.getElementById("crossDeviceSearchContainer");
+        el.classList.toggle("hidden");
+      }
+
+      function renderMyDeviceOrders(customList = null) {
+        const container = document.getElementById("myOrdersListContainer");
+
+        // If customList is passed (e.g. from search), render that, otherwise filter by myDeviceId
+        const orderList =
+          customList !== null
+            ? customList
+            : orders.filter((o) => o.deviceId === myDeviceId);
+
+        if (orderList.length === 0) {
+          container.innerHTML = `
+          <div class="text-center py-10 bg-stone-50 rounded-2xl border border-stone-200">
+            <div class="text-4xl mb-2">📱🌾</div>
+            <p class="font-fredoka text-stone-700 font-bold text-base">Tidak ada riwayat pesanan di perangkat ini.</p>
+            <p class="text-xs text-stone-400 mt-1 max-w-sm mx-auto">Setiap perangkat memiliki riwayat transaksi terpisah. Jika Anda baru saja berbelanja di HP atau browser lain, gunakan tombol pencarian di atas untuk melacak.</p>
+          </div>
+        `;
+          return;
+        }
+
+        container.innerHTML = orderList
+          .map((ord) => {
+            let statusBadge = "";
+            switch (ord.status) {
+              case "PENDING":
+                statusBadge =
+                  '<span class="bg-amber-100 text-amber-800 text-xs px-2.5 py-0.5 rounded-full font-bold">Menunggu Bayar</span>';
+                break;
+              case "PAID":
+                statusBadge =
+                  '<span class="bg-blue-100 text-blue-800 text-xs px-2.5 py-0.5 rounded-full font-bold">Sudah Bayar</span>';
+                break;
+              case "READY_SHOP":
+                statusBadge =
+                  '<span class="bg-purple-100 text-purple-800 text-xs px-2.5 py-0.5 rounded-full font-bold">Siap di Kios</span>';
+                break;
+              case "COMPLETED":
+                statusBadge =
+                  '<span class="bg-green-100 text-green-800 text-xs px-2.5 py-0.5 rounded-full font-bold">Selesai</span>';
+                break;
+              case "CANCELLED":
+                statusBadge =
+                  '<span class="bg-red-100 text-red-800 text-xs px-2.5 py-0.5 rounded-full font-bold">Dibatalkan</span>';
+                break;
+            }
+
+            const isCurrentDevice = ord.deviceId === myDeviceId;
+
+            return `
+          <div class="bg-stone-50 p-4 rounded-2xl border border-stone-200 space-y-2 relative">
+            <div class="flex justify-between items-center">
+              <div class="flex items-center gap-2">
+                <span class="font-mono font-bold text-xs bg-amber-100 px-2 py-0.5 rounded text-amber-900">${ord.orderId}</span>
+                ${isCurrentDevice ? '<span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.2 rounded">Device Ini</span>' : '<span class="text-[10px] bg-stone-200 text-stone-600 font-bold px-1.5 py-0.2 rounded">Device Lain</span>'}
+              </div>
+              ${statusBadge}
+            </div>
+            <div class="text-xs text-stone-600">
+              <p><strong>Farm:</strong> ${ord.farmName} (#${ord.playerTag})</p>
+              <p><strong>Tanggal:</strong> ${ord.createdAt}</p>
+              <p class="text-stone-500 mt-1">${ord.items.map((i) => `${i.name} (x${i.qty})`).join(", ")}</p>
+            </div>
+            <div class="pt-2 border-t border-stone-200 flex justify-between items-center">
+              <span class="font-fredoka font-bold text-emerald-700 text-sm">${formatRupiah(ord.totalPrice)}</span>
+              <button onclick="openInvoiceModalById('${ord.orderId}')" class="text-xs text-farm-wood font-semibold hover:underline">Lihat Invoice & WA</button>
+            </div>
+          </div>
+        `;
+          })
+          .join("");
+      }
+
+      function executeCrossDeviceSearch() {
+        const q = (document.getElementById("crossSearchQuery")?.value || "")
+          .trim()
+          .toLowerCase()
+          .replace("#", "");
+        if (!q) {
+          showToast("Masukkan nomor WhatsApp atau Tag Hay Day!", "error");
+          return;
+        }
+
+        const results = orders.filter((o) => {
+          return (
+            o.playerTag.toLowerCase().includes(q) ||
+            o.whatsapp.replace(/\D/g, "").includes(q) ||
+            o.orderId.toLowerCase().includes(q)
+          );
+        });
+
+        renderMyDeviceOrders(results);
+        showToast(`Ditemukan ${results.length} pesanan cocok.`);
+      }
+
+      function resetDeviceOrdersView() {
+        document.getElementById("crossSearchQuery").value = "";
+        renderMyDeviceOrders(null);
+      }
+
+      function openInvoiceModalById(orderId) {
+        const ord = orders.find((o) => o.orderId === orderId);
+        if (ord) {
+          closeMyOrdersModal();
+          openInvoiceModal(ord);
+        }
+      }
+
+      function toggleRoleModal() {
+        document.getElementById("roleModal").classList.remove("hidden");
+      }
+
+      function closeRoleModal() {
+        document.getElementById("roleModal").classList.add("hidden");
+      }
+
+      function selectRole(role) {
+        currentRole = role;
+        closeRoleModal();
+        applyRoleView();
+        showToast(
+          `Beralih ke: ${role === "buyer" ? "Mode Pembeli" : "Mode Admin Toko"}`,
+          "info",
+        );
+      }
+
+      function verifyAndSelectAdmin() {
+        const pin = document.getElementById("adminPinInput").value.trim();
+        const correctPin = shopSettings.adminPin || "1234";
+        if (!pin || pin === correctPin || pin === "1234") {
+          selectRole("admin");
+          document.getElementById("adminPinInput").value = "";
+        } else {
+          showToast("PIN Admin salah! (Gunakan 1234)", "error");
+        }
+      }
+
+      function switchView(role) {
+        currentRole = role;
+        applyRoleView();
+      }
+
+      function applyRoleView() {
+        const buyerView = document.getElementById("buyerView");
+        const adminView = document.getElementById("adminView");
+        const badge = document.getElementById("roleIndicatorBadge");
+        const toggleText = document.getElementById("roleToggleText");
+        const cartBtn = document.getElementById("cartNavBtn");
+        const ordersBtn = document.getElementById("ordersNavBtn");
+
+        if (currentRole === "buyer") {
+          buyerView.classList.remove("hidden");
+          adminView.classList.add("hidden");
+          badge.textContent = "PEMBELI";
+          badge.className =
+            "text-[11px] uppercase px-2.5 py-0.5 rounded-full font-bold bg-green-500 text-white shadow tracking-wider";
+          toggleText.textContent = "Ganti ke Admin";
+          cartBtn.classList.remove("hidden");
+          ordersBtn.classList.remove("hidden");
+          renderBuyerProducts();
+          updateMyOrdersBadge();
+        } else {
+          buyerView.classList.add("hidden");
+          adminView.classList.remove("hidden");
+          badge.textContent = "ADMIN TOKO";
+          badge.className =
+            "text-[11px] uppercase px-2.5 py-0.5 rounded-full font-bold bg-amber-400 text-stone-900 shadow tracking-wider";
+          toggleText.textContent = "Mode Pembeli";
+          cartBtn.classList.add("hidden");
+          ordersBtn.classList.add("hidden");
+          renderAdminDashboard();
+          renderAdminOrders();
+          renderAdminProductsTable();
+        }
+      }
+
+      function renderAdminDashboard() {
+        const totalOrders = orders.length;
+        const pendingOrders = orders.filter(
+          (o) => o.status === "PENDING",
+        ).length;
+        const completedRevenue = orders
+          .filter(
+            (o) =>
+              o.status === "COMPLETED" ||
+              o.status === "PAID" ||
+              o.status === "READY_SHOP",
+          )
+          .reduce((sum, o) => sum + o.totalPrice, 0);
+        const totalItems = products.length;
+        const outOfStock = products.filter((p) => p.stock <= 0).length;
+
+        // Calculate distinct customer devices
+        const distinctDevices = new Set(
+          orders.map((o) => o.deviceId || "DEV-LEGACY"),
+        ).size;
+
+        document.getElementById("statTotalOrders").textContent = totalOrders;
+        document.getElementById("statUniqueDevicesBadge").textContent =
+          `${distinctDevices} Device Berbeda`;
+        document.getElementById("statRevenue").textContent =
+          formatRupiah(completedRevenue);
+        document.getElementById("statTotalItems").textContent = totalItems;
+        document.getElementById("statOutOfStockBadge").textContent =
+          `${outOfStock} Stok Habis`;
+        document.getElementById("statPendingOrders").textContent =
+          pendingOrders;
+        document.getElementById("pendingCountTabBadge").textContent =
+          pendingOrders;
+      }
+
+      function switchAdminTab(tab) {
+        const ordersTab = document.getElementById("adminTabOrders");
+        const productsTab = document.getElementById("adminTabProducts");
+        const btnOrders = document.getElementById("adminTabOrdersBtn");
+        const btnProducts = document.getElementById("adminTabProductsBtn");
+
+        if (tab === "orders") {
+          ordersTab.classList.remove("hidden");
+          productsTab.classList.add("hidden");
+          btnOrders.className =
+            "py-3 px-5 font-fredoka font-bold text-base border-b-4 border-farm-wood text-farm-woodDark flex items-center gap-2 transition-all";
+          btnProducts.className =
+            "py-3 px-5 font-fredoka font-bold text-base border-b-4 border-transparent text-stone-500 hover:text-stone-800 flex items-center gap-2 transition-all";
+          renderAdminOrders();
+        } else {
+          ordersTab.classList.add("hidden");
+          productsTab.classList.remove("hidden");
+          btnProducts.className =
+            "py-3 px-5 font-fredoka font-bold text-base border-b-4 border-farm-wood text-farm-woodDark flex items-center gap-2 transition-all";
+          btnOrders.className =
+            "py-3 px-5 font-fredoka font-bold text-base border-b-4 border-transparent text-stone-500 hover:text-stone-800 flex items-center gap-2 transition-all";
+          renderAdminProductsTable();
+        }
+      }
+
+      function renderAdminOrders() {
+        const container = document.getElementById("adminOrdersContainer");
+        const filter = document.getElementById("adminOrderFilterStatus").value;
+        const searchQuery = (
+          document.getElementById("adminOrderSearchInput")?.value || ""
+        )
+          .toLowerCase()
+          .trim();
+
+        const filteredOrders = orders.filter((o) => {
+          if (filter !== "ALL" && o.status !== filter) return false;
+          if (searchQuery) {
+            const matchId = o.orderId.toLowerCase().includes(searchQuery);
+            const matchTag = o.playerTag.toLowerCase().includes(searchQuery);
+            const matchFarm = o.farmName.toLowerCase().includes(searchQuery);
+            const matchWa = o.whatsapp.includes(searchQuery);
+            const matchDev = (o.deviceId || "")
+              .toLowerCase()
+              .includes(searchQuery);
+            return matchId || matchTag || matchFarm || matchWa || matchDev;
+          }
+          return true;
+        });
+
+        if (filteredOrders.length === 0) {
+          container.innerHTML = `
+          <div class="bg-white rounded-3xl p-8 text-center text-stone-500 border border-stone-200">
+            <div class="text-4xl mb-2">📬</div>
+            <p class="font-fredoka font-medium">Tidak ada pesanan yang sesuai dengan filter.</p>
+          </div>
+        `;
+          return;
+        }
+
+        container.innerHTML = filteredOrders
+          .map((ord) => {
+            const deviceTag = ord.deviceId || "DEV-LEGACY";
+            return `
+          <div class="bg-white rounded-3xl p-5 border-2 border-amber-200 shadow-sm space-y-3">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-2 border-b border-stone-100">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="font-mono font-bold text-sm bg-amber-100 text-farm-woodDark px-2.5 py-1 rounded-md">${ord.orderId}</span>
+                <span class="text-xs text-stone-500"><i class="fa-regular fa-clock"></i> ${ord.createdAt}</span>
+                <span class="bg-stone-100 text-stone-600 text-xs px-2 py-0.5 rounded font-medium">${ord.paymentMethod}</span>
+                <!-- Device ID Badge in Admin View -->
+                <span class="text-[11px] font-mono bg-indigo-50 text-indigo-700 border border-indigo-200 px-2 py-0.5 rounded-full font-bold" title="Device ID Pembeli">
+                  <i class="fa-solid fa-mobile-screen"></i> ${deviceTag}
+                </span>
+              </div>
+              
+              <!-- Quick Status Selector -->
+              <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                <span class="text-xs font-bold text-stone-500">Status:</span>
+                <select 
+                  onchange="updateOrderStatus('${ord.orderId}', this.value)" 
+                  class="text-xs font-fredoka font-bold px-3 py-1.5 rounded-xl border focus:outline-none ${getStatusColorClass(ord.status)}"
+                >
+                  <option value="PENDING" ${ord.status === "PENDING" ? "selected" : ""}>Menunggu Pembayaran</option>
+                  <option value="PAID" ${ord.status === "PAID" ? "selected" : ""}>Sudah Dibayar</option>
+                  <option value="READY_SHOP" ${ord.status === "READY_SHOP" ? "selected" : ""}>Siap di Kios (Roadside)</option>
+                  <option value="COMPLETED" ${ord.status === "COMPLETED" ? "selected" : ""}>Selesai</option>
+                  <option value="CANCELLED" ${ord.status === "CANCELLED" ? "selected" : ""}>Batalkan Pesanan</option>
+                </select>
+                <button onclick="adminDeleteOrder('${ord.orderId}')" class="text-red-400 hover:text-red-600 p-1" title="Hapus Order">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Customer Details -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs bg-amber-50/60 p-3 rounded-2xl">
+              <div>
+                <span class="text-stone-400 block font-medium">Tag Akun Hay Day:</span>
+                <span class="font-mono font-bold text-sm text-farm-barnRed select-all">#${ord.playerTag}</span>
+              </div>
+              <div>
+                <span class="text-stone-400 block font-medium">Nama Kebun:</span>
+                <span class="font-bold text-stone-800 text-sm">${ord.farmName}</span>
+              </div>
+              <div>
+                <span class="text-stone-400 block font-medium">WhatsApp Pembeli:</span>
+                <a href="https://wa.me/${ord.whatsapp.replace(/\D/g, "")}" target="_blank" class="text-emerald-700 font-bold hover:underline flex items-center gap-1">
+                  <i class="fa-brands fa-whatsapp text-sm"></i> ${ord.whatsapp}
+                </a>
+              </div>
+            </div>
+
+            <!-- Items List with Miniature Images -->
+            <div class="text-xs space-y-1">
+              <span class="text-stone-400 font-semibold block">Daftar item untuk dipajang di Roadside:</span>
+              <div class="flex flex-wrap gap-2">
+                ${ord.items
+                  .map(
+                    (item) => `
+                  <span class="bg-stone-50 border border-stone-200 px-2.5 py-1.5 rounded-xl font-medium flex items-center gap-2">
+                    <img src="${item.image}" alt="${item.name}" class="w-6 h-6 object-contain" onerror="this.src='https://placehold.co/30x30/faebd7/8b5a2b?text=Item';">
+                    <span>${item.name} <strong class="text-farm-wood">x${item.qty}</strong></span>
+                  </span>
+                `,
+                  )
+                  .join("")}
+              </div>
+            </div>
+
+            ${
+              ord.notes
+                ? `
+              <div class="text-xs bg-yellow-50 text-amber-900 p-2.5 rounded-xl border border-amber-200">
+                <strong>Catatan Pembeli:</strong> ${ord.notes}
+              </div>
+            `
+                : ""
+            }
+
+            <div class="pt-2 flex justify-between items-center">
+              <span class="text-xs text-stone-500">Total Tagihan:</span>
+              <span class="font-fredoka font-bold text-lg text-emerald-700">${formatRupiah(ord.totalPrice)}</span>
+            </div>
+          </div>
+        `;
+          })
+          .join("");
+      }
+
+      function getStatusColorClass(status) {
+        switch (status) {
+          case "PENDING":
+            return "bg-amber-100 text-amber-900 border-amber-300";
+          case "PAID":
+            return "bg-blue-100 text-blue-900 border-blue-300";
+          case "READY_SHOP":
+            return "bg-purple-100 text-purple-900 border-purple-300";
+          case "COMPLETED":
+            return "bg-green-100 text-green-900 border-green-300";
+          case "CANCELLED":
+            return "bg-red-100 text-red-900 border-red-300";
+          default:
+            return "bg-stone-100";
+        }
+      }
+
+      function updateOrderStatus(orderId, newStatus) {
+        const order = orders.find((o) => o.orderId === orderId);
+        if (order) {
+          order.status = newStatus;
+          saveOrders();
+          renderAdminDashboard();
+          renderAdminOrders();
+          showToast(`Status pesanan ${orderId} diubah ke ${newStatus}`);
+        }
+      }
+
+      function adminDeleteOrder(orderId) {
+        if (confirm(`Yakin ingin menghapus pesanan ${orderId}?`)) {
+          orders = orders.filter((o) => o.orderId !== orderId);
+          saveOrders();
+          renderAdminDashboard();
+          renderAdminOrders();
+          showToast(`Pesanan ${orderId} dihapus.`, "info");
+        }
+      }
+
+      function renderAdminProductsTable() {
+        const tbody = document.getElementById("adminProductsTableBody");
+        const search = (
+          document.getElementById("adminProductSearchInput")?.value || ""
+        ).toLowerCase();
+        const categoryFilter =
+          document.getElementById("adminProductFilterCategory")?.value || "ALL";
+
+        const filtered = products.filter((p) => {
+          if (categoryFilter !== "ALL" && p.category !== categoryFilter)
+            return false;
+          if (
+            search &&
+            !p.name.toLowerCase().includes(search) &&
+            !p.category.toLowerCase().includes(search) &&
+            !p.id.toLowerCase().includes(search)
+          )
+            return false;
+          return true;
+        });
+
+        if (filtered.length === 0) {
+          tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="text-center py-10 text-stone-400">
+              <div class="text-3xl mb-1">📦</div>
+              <p class="font-fredoka text-sm">Tidak ada barang yang cocok dengan filter.</p>
+              <button onclick="openAddProductModal()" class="mt-3 inline-flex items-center gap-1.5 px-4 py-2 bg-farm-green text-white text-xs font-fredoka rounded-xl shadow">
+                <i class="fa-solid fa-plus"></i> Tambah Barang Sekarang
+              </button>
+            </td>
+          </tr>
+        `;
+          return;
+        }
+
+        tbody.innerHTML = filtered
+          .map((p) => {
+            const fallbackImg = `https://placehold.co/80x80/faebd7/8b5a2b?text=${encodeURIComponent(p.name)}`;
+            return `
+          <tr class="hover:bg-amber-50/50 transition-colors">
+            <td class="px-4 py-3">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-white border border-amber-200 p-1 flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <img src="${p.image || fallbackImg}" alt="${p.name}" class="w-full h-full object-contain" onerror="this.src='${fallbackImg}';">
+                </div>
+                <div>
+                  <div class="font-bold text-stone-800">${p.name}</div>
+                  <span class="text-[10px] text-stone-400 font-mono">${p.id}</span>
+                </div>
+              </div>
+            </td>
+            <td class="px-4 py-3">
+              <span class="px-2.5 py-0.5 rounded-lg text-xs font-semibold border ${getCategoryBadgeColor(p.category)}">
+                ${getCategoryIcon(p.category)} ${p.category}
+              </span>
+            </td>
+            <td class="px-4 py-3">
+              <input 
+                type="number" 
+                value="${p.price}" 
+                step="100" 
+                class="w-24 px-2 py-1 border rounded-lg font-mono text-xs focus:outline-none focus:ring-1 focus:ring-amber-600"
+                onchange="quickUpdateProductPrice('${p.id}', this.value)"
+              >
+            </td>
+            <td class="px-4 py-3 text-xs text-stone-500">${p.unit}</td>
+            <td class="px-4 py-3">
+              <div class="flex items-center gap-1.5">
+                <button onclick="quickAdjustStock('${p.id}', -10)" class="w-6 h-6 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded text-xs font-bold">-10</button>
+                <input 
+                  type="number" 
+                  value="${p.stock}" 
+                  min="0"
+                  class="w-16 px-2 py-1 text-center border rounded-lg font-mono text-xs font-bold ${p.stock <= 0 ? "text-red-500 border-red-300" : "text-stone-800"} focus:outline-none"
+                  onchange="quickUpdateProductStock('${p.id}', this.value)"
+                >
+                <button onclick="quickAdjustStock('${p.id}', 10)" class="w-6 h-6 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded text-xs font-bold">+10</button>
+              </div>
+            </td>
+            <td class="px-4 py-3">
+              <button 
+                onclick="toggleProductActive('${p.id}')" 
+                class="px-2.5 py-1 rounded-full text-xs font-bold ${p.active ? "bg-green-100 text-green-800" : "bg-stone-200 text-stone-500"}"
+              >
+                ${p.active ? "Aktif" : "Disembunyikan"}
+              </button>
+            </td>
+            <td class="px-4 py-3 text-right">
+              <div class="flex items-center justify-end gap-2">
+                <button onclick="editProductModal('${p.id}')" class="text-blue-600 hover:text-blue-800 p-1.5" title="Edit Detail & Foto">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button onclick="deleteProduct('${p.id}')" class="text-red-500 hover:text-red-700 p-1.5" title="Hapus Item">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+          })
+          .join("");
+      }
+
+      function quickAdjustStock(productId, delta) {
+        const prod = products.find((p) => p.id === productId);
+        if (prod) {
+          prod.stock = Math.max(0, prod.stock + delta);
+          saveProducts();
+          renderAdminProductsTable();
+          renderBuyerProducts();
+          renderAdminDashboard();
+          showToast(`Stok ${prod.name} disesuaikan: ${prod.stock}`);
+        }
+      }
+
+      function quickUpdateProductPrice(productId, newPrice) {
+        const prod = products.find((p) => p.id === productId);
+        const val = parseInt(newPrice);
+        if (prod && !isNaN(val) && val >= 0) {
+          prod.price = val;
+          saveProducts();
+          renderBuyerProducts();
+          showToast(`Harga ${prod.name} diubah jadi ${formatRupiah(val)}`);
+        }
+      }
+
+      function quickUpdateProductStock(productId, newStock) {
+        const prod = products.find((p) => p.id === productId);
+        const val = parseInt(newStock);
+        if (prod && !isNaN(val) && val >= 0) {
+          prod.stock = val;
+          saveProducts();
+          renderBuyerProducts();
+          renderAdminDashboard();
+          showToast(`Stok ${prod.name} diperbarui: ${val} unit`);
+        }
+      }
+
+      function toggleProductActive(productId) {
+        const prod = products.find((p) => p.id === productId);
+        if (prod) {
+          prod.active = !prod.active;
+          saveProducts();
+          renderAdminProductsTable();
+          renderBuyerProducts();
+          showToast(
+            `${prod.name} ${prod.active ? "sekarang ditampilkan" : "disembunyikan dari pembeli"}`,
+          );
+        }
+      }
+
+      function deleteProduct(productId) {
+        const prod = products.find((p) => p.id === productId);
+        if (!prod) return;
+        if (
+          confirm(`Yakin ingin menghapus item "${prod.name}" dari katalog?`)
+        ) {
+          products = products.filter((p) => p.id !== productId);
+          cart = cart.filter((c) => c.productId !== productId);
+          saveProducts();
+          saveCart();
+          renderAdminDashboard();
+          renderAdminProductsTable();
+          renderBuyerProducts();
+          showToast(`Item ${prod.name} berhasil dihapus.`);
+        }
+      }
+
+      function handleImageFileSelect(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          tempActiveImageSource = e.target.result;
+          document.getElementById("crudImagePreview").src =
+            tempActiveImageSource;
+          document.getElementById("crudImageUrl").value = "";
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function handleImageUrlInput(url) {
+        const trimmed = url.trim();
+        if (trimmed) {
+          tempActiveImageSource = trimmed;
+          document.getElementById("crudImagePreview").src = trimmed;
+          document.getElementById("crudFileInput").value = "";
+        }
+      }
+
+      function openAddProductModal() {
+        document.getElementById("productCrudForm").reset();
+        document.getElementById("crudProductId").value = "";
+        document.getElementById("productCrudModalTitle").textContent =
+          "Tambah Item Hay Day Baru";
+        document.getElementById("crudProductActive").value = "true";
+        document
+          .getElementById("customCategoryInputGroup")
+          .classList.add("hidden");
+        document.getElementById("crudCustomCategoryName").value = "";
+
+        refreshCategorySelectDropdowns();
+        tempActiveImageSource =
+          "https://static.wikia.nocookie.net/hayday/images/1/14/Bolt.png";
+        document.getElementById("crudImagePreview").src = tempActiveImageSource;
+        document.getElementById("crudImageUrl").value = "";
+        document.getElementById("crudFileInput").value = "";
+
+        document.getElementById("productCrudModal").classList.remove("hidden");
+      }
+
+      function editProductModal(productId) {
+        const prod = products.find((p) => p.id === productId);
+        if (!prod) return;
+
+        refreshCategorySelectDropdowns();
+
+        document.getElementById("crudProductId").value = prod.id;
+        document.getElementById("crudProductName").value = prod.name;
+        document.getElementById("crudProductPrice").value = prod.price;
+        document.getElementById("crudProductUnit").value = prod.unit;
+        document.getElementById("crudProductStock").value = prod.stock;
+        document.getElementById("crudProductActive").value = prod.active
+          ? "true"
+          : "false";
+        document.getElementById("crudProductDesc").value = prod.desc || "";
+
+        const catSelect = document.getElementById("crudProductCategory");
+        const customGroup = document.getElementById("customCategoryInputGroup");
+        const customInput = document.getElementById("crudCustomCategoryName");
+
+        let optionExists = false;
+        for (let opt of catSelect.options) {
+          if (opt.value === prod.category) {
+            optionExists = true;
+            break;
+          }
+        }
+
+        if (optionExists) {
+          catSelect.value = prod.category;
+          customGroup.classList.add("hidden");
+          customInput.value = "";
+        } else {
+          catSelect.value = "CUSTOM";
+          customGroup.classList.remove("hidden");
+          customInput.value = prod.category;
+        }
+
+        tempActiveImageSource = prod.image || "";
+        document.getElementById("crudImagePreview").src =
+          prod.image || "https://placehold.co/120x120/faebd7/8b5a2b?text=Item";
+
+        if (prod.image && prod.image.startsWith("http")) {
+          document.getElementById("crudImageUrl").value = prod.image;
+        } else {
+          document.getElementById("crudImageUrl").value = "";
+        }
+        document.getElementById("crudFileInput").value = "";
+
+        document.getElementById("productCrudModalTitle").textContent =
+          "Edit Item: " + prod.name;
+        document.getElementById("productCrudModal").classList.remove("hidden");
+      }
+
+      function closeProductCrudModal() {
+        document.getElementById("productCrudModal").classList.add("hidden");
+      }
+
+      function handleProductCrudSubmit(e) {
+        e.preventDefault();
+
+        const existingId = document.getElementById("crudProductId").value;
+        const name = document.getElementById("crudProductName").value.trim();
+        const selectedCategory = document.getElementById(
+          "crudProductCategory",
+        ).value;
+        const customCategoryName = document
+          .getElementById("crudCustomCategoryName")
+          .value.trim();
+
+        let finalCategory = selectedCategory;
+        if (selectedCategory === "CUSTOM") {
+          if (!customCategoryName) {
+            showToast("Ketikkan nama kategori kustom!", "error");
+            return;
+          }
+          finalCategory = customCategoryName;
+        }
+
+        const price =
+          parseInt(document.getElementById("crudProductPrice").value) || 1000;
+        const unit = document.getElementById("crudProductUnit").value;
+        const stock =
+          parseInt(document.getElementById("crudProductStock").value) || 0;
+        const active =
+          document.getElementById("crudProductActive").value === "true";
+        const desc = document.getElementById("crudProductDesc").value.trim();
+
+        let finalImage = tempActiveImageSource;
+        const inputUrl = document.getElementById("crudImageUrl").value.trim();
+        if (inputUrl) {
+          finalImage = inputUrl;
+        }
+        if (!finalImage) {
+          finalImage = `https://placehold.co/150x150/faebd7/8b5a2b?text=${encodeURIComponent(name)}`;
+        }
+
+        if (existingId) {
+          const p = products.find((item) => item.id === existingId);
+          if (p) {
+            p.name = name;
+            p.category = finalCategory;
+            p.image = finalImage;
+            p.price = price;
+            p.unit = unit;
+            p.stock = stock;
+            p.active = active;
+            p.desc = desc;
+            showToast(`Item "${name}" berhasil diperbarui!`);
+          }
+        } else {
+          const newId = "HD-" + Math.floor(100 + Math.random() * 900);
+          products.unshift({
+            id: newId,
+            name,
+            category: finalCategory,
+            image: finalImage,
+            price,
+            unit,
+            stock,
+            active,
+            desc,
+          });
+          showToast(`Item "${name}" (${finalCategory}) berhasil ditambahkan!`);
+        }
+
+        saveProducts();
+        closeProductCrudModal();
+        renderAdminDashboard();
+        renderAdminProductsTable();
+        renderBuyerProducts();
+      }
+
+      function openSettingsModal() {
+        document.getElementById("settingAdminTag").value =
+          shopSettings.adminTag || "";
+        document.getElementById("settingAdminWa").value =
+          shopSettings.adminWa || "";
+        document.getElementById("settingAdminPin").value = "";
+        document.getElementById("settingsModal").classList.remove("hidden");
+      }
+
+      function closeSettingsModal() {
+        document.getElementById("settingsModal").classList.add("hidden");
+      }
+
+      function handleSettingsSubmit(e) {
+        e.preventDefault();
+        const rawTag = document
+          .getElementById("settingAdminTag")
+          .value.trim()
+          .replace("#", "")
+          .toUpperCase();
+        const wa = document.getElementById("settingAdminWa").value.trim();
+        const pin = document.getElementById("settingAdminPin").value.trim();
+
+        shopSettings.adminTag = rawTag;
+        shopSettings.adminWa = wa;
+        if (pin) {
+          shopSettings.adminPin = pin;
+        }
+
+        saveSettings();
+        closeSettingsModal();
+        showToast("Pengaturan toko berhasil disimpan!");
+      }
+
+      window.addEventListener("DOMContentLoaded", () => {
+        initAppState();
+      });
+    </script>
+  </body>
+</html>
